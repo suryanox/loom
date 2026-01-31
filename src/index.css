@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.toolbox {
+  width: 240px;
+  background: #1a1a2e;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.toolbox-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toolbox-section {
+  margin-bottom: 16px;
+}
+
+.toolbox-section-title {
+  color: #888;
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #16213e;
+  border-radius: 8px;
+  cursor: grab;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.tool-item:hover {
+  background: #1f3460;
+  border-color: #3b82f6;
+}
+
+.tool-item:active {
+  cursor: grabbing;
+}
+
+.tool-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.tool-label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.flow-container {
+  flex: 1;
+  height: 100%;
+}
+
+.react-flow__node {
+  font-size: 12px;
+}
+
+.custom-node {
+  padding: 12px 16px;
+  border-radius: 8px;
+  min-width: 120px;
+  text-align: center;
+  border: 2px solid;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.custom-node-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.custom-node-label {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.node-user { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+.node-agent { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.node-service { background: #d1fae5; border-color: #10b981; color: #065f46; }
+.node-loadbalancer { background: #e0e7ff; border-color: #6366f1; color: #3730a3; }
+.node-gateway { background: #fce7f3; border-color: #ec4899; color: #9d174d; }
+.node-database { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+.node-queue { background: #f3e8ff; border-color: #a855f7; color: #6b21a8; }
+.node-frontend { background: #ccfbf1; border-color: #14b8a6; color: #0f766e; }
+.node-mobile { background: #fef9c3; border-color: #eab308; color: #854d0e; }
+
+.edge-toolbar {
+  display: flex;
+  gap: 4px;
+  background: #1a1a2e;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.edge-toolbar button {
+  padding: 4px 8px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.edge-toolbar button:hover {
+  background: #2563eb;
+}
