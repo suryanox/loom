@@ -84,6 +84,7 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
         type,
         position,
         data: { label: type.charAt(0).toUpperCase() + type.slice(1) },
+        style: { width: 100, height: 100 },
       };
 
       setNodes((nds) => [...nds, newNode]);

@@ -49,10 +49,10 @@ export function BaseNode({ id, data, selected }: NodeProps & { data: BaseNodeDat
     <div className="custom-node">
       <NodeResizer
         isVisible={selected}
-        minWidth={60}
-        minHeight={60}
+        minWidth={80}
+        minHeight={80}
         lineStyle={{ stroke: '#333', strokeWidth: 1 }}
-        handleStyle={{ fill: '#333', width: 8, height: 8 }}
+        handleStyle={{ fill: '#333', width: 8, height: 8, borderRadius: 2 }}
       />
       <Handle type="target" position={Position.Top} />
       <div className="custom-node-icon">{data.icon}</div>
