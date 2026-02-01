@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo.svg" width="120" alt="Loom" />
+  <img src="assets/logo.svg" width="120" alt="Loom" />
 </p>
 
 <h1 align="center">Loom</h1>
