@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -19,6 +19,7 @@ import '@xyflow/react/dist/style.css';
 import { nodeTypes } from '../nodes';
 import { edgeTypes } from '../edges';
 import { EdgeType, ArrowType } from '../types';
+import { saveDiagram, loadDiagram } from '../utils/storage';
 
 interface FlowCanvasProps {
   selectedEdgeType: EdgeType;
@@ -38,10 +39,15 @@ const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
 };
 
 export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: FlowCanvasProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const initialData = useRef(loadDiagram());
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialData.current?.nodes || []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialData.current?.edges || []);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
   const { screenToFlowPosition } = useReactFlow();
+
+  useEffect(() => {
+    saveDiagram(nodes, edges);
+  }, [nodes, edges]);
 
   const onSelectionChange: OnSelectionChangeFunc = useCallback(({ edges: selectedEdges }) => {
     setSelectedEdgeIds(selectedEdges.map(e => e.id));
