@@ -10,7 +10,11 @@ export type NodeType =
   | 'queue'
   | 'cache'
   | 'frontend'
-  | 'mobile';
+  | 'mobile'
+  | 'cdn'
+  | 'blobstorage'
+  | 'authprovider'
+  | 'notification';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
 export type ArrowType = 'none' | 'head' | 'both';

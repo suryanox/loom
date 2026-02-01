@@ -11,6 +11,10 @@ import { QueueNode } from './QueueNode';
 import { CacheNode } from './CacheNode';
 import { FrontendNode } from './FrontendNode';
 import { MobileNode } from './MobileNode';
+import { CDNNode } from './CDNNode';
+import { BlobStorageNode } from './BlobStorageNode';
+import { AuthProviderNode } from './AuthProviderNode';
+import { NotificationNode } from './NotificationNode';
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -25,4 +29,8 @@ export const nodeTypes: NodeTypes = {
   cache: CacheNode,
   frontend: FrontendNode,
   mobile: MobileNode,
+  cdn: CDNNode,
+  blobstorage: BlobStorageNode,
+  authprovider: AuthProviderNode,
+  notification: NotificationNode,
 };

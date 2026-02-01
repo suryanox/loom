@@ -12,6 +12,10 @@ import { QueueIcon } from './icons/QueueIcon';
 import { CacheIcon } from './icons/CacheIcon';
 import { FrontendIcon } from './icons/FrontendIcon';
 import { MobileIcon } from './icons/MobileIcon';
+import { CDNIcon } from './icons/CDNIcon';
+import { BlobStorageIcon } from './icons/BlobStorageIcon';
+import { AuthProviderIcon } from './icons/AuthProviderIcon';
+import { NotificationIcon } from './icons/NotificationIcon';
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -32,4 +36,8 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: 'cache', label: 'Cache', icon: <CacheIcon /> },
   { type: 'frontend', label: 'Frontend', icon: <FrontendIcon /> },
   { type: 'mobile', label: 'Mobile App', icon: <MobileIcon /> },
+  { type: 'cdn', label: 'CDN', icon: <CDNIcon /> },
+  { type: 'blobstorage', label: 'Blob Storage', icon: <BlobStorageIcon /> },
+  { type: 'authprovider', label: 'Auth Provider', icon: <AuthProviderIcon /> },
+  { type: 'notification', label: 'Notification', icon: <NotificationIcon /> },
 ];
