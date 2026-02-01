@@ -1,8 +1,11 @@
 import { EdgeTypes } from '@xyflow/react';
-import { DashedEdge } from './DashedEdge';
-import { AnimatedEdge } from './AnimatedEdge';
+import { LabeledEdge } from './LabeledEdge';
 
 export const edgeTypes: EdgeTypes = {
-  dashed: DashedEdge,
-  animated: AnimatedEdge,
+  default: LabeledEdge,
+  straight: LabeledEdge,
+  step: LabeledEdge,
+  smoothstep: LabeledEdge,
+  dashed: LabeledEdge,
+  animated: LabeledEdge,
 };

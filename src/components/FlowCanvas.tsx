@@ -81,6 +81,7 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: Fl
         type: selectedEdgeType,
         animated: selectedEdgeType === 'animated',
         style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
+        data: { label: '' },
         ...getMarkers(selectedArrowType, darkMode),
       };
       setEdges((eds) => addEdge(newEdge, eds));
