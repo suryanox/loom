@@ -13,6 +13,7 @@ export type NodeType =
   | 'mobile';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
+export type ArrowType = 'none' | 'head' | 'both';
 
 export const EDGE_TYPES: { type: EdgeType; label: string }[] = [
   { type: 'default', label: 'Bezier' },
@@ -21,4 +22,10 @@ export const EDGE_TYPES: { type: EdgeType; label: string }[] = [
   { type: 'smoothstep', label: 'Smooth Step' },
   { type: 'dashed', label: 'Dashed' },
   { type: 'animated', label: 'Animated' },
+];
+
+export const ARROW_TYPES: { type: ArrowType; label: string }[] = [
+  { type: 'none', label: 'No Arrow' },
+  { type: 'head', label: 'Arrow →' },
+  { type: 'both', label: 'Arrow ↔' },
 ];

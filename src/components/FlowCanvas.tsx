@@ -13,17 +13,30 @@ import {
   OnConnect,
   OnSelectionChangeFunc,
   useReactFlow,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { nodeTypes } from '../nodes';
 import { edgeTypes } from '../edges';
-import { EdgeType } from '../types';
+import { EdgeType, ArrowType } from '../types';
 
 interface FlowCanvasProps {
   selectedEdgeType: EdgeType;
+  selectedArrowType: ArrowType;
 }
 
-export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
+const getMarkers = (arrowType: ArrowType) => {
+  const marker = { type: MarkerType.ArrowClosed, color: '#333' };
+  if (arrowType === 'head') {
+    return { markerStart: undefined, markerEnd: marker };
+  }
+  if (arrowType === 'both') {
+    return { markerStart: marker, markerEnd: marker };
+  }
+  return { markerStart: undefined, markerEnd: undefined };
+};
+
+export function FlowCanvas({ selectedEdgeType, selectedArrowType }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
@@ -38,18 +51,21 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
       setEdges((eds) =>
         eds.map((edge) => {
           if (selectedEdgeIds.includes(edge.id)) {
+            const markers = getMarkers(selectedArrowType);
             return {
               ...edge,
               type: selectedEdgeType,
               animated: selectedEdgeType === 'animated',
-              style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
+              style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : {},
+              markerStart: markers.markerStart,
+              markerEnd: markers.markerEnd,
             };
           }
           return edge;
         })
       );
     }
-  }, [selectedEdgeType, selectedEdgeIds, setEdges]);
+  }, [selectedEdgeType, selectedArrowType, selectedEdgeIds, setEdges]);
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
@@ -58,10 +74,11 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
         type: selectedEdgeType,
         animated: selectedEdgeType === 'animated',
         style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
+        ...getMarkers(selectedArrowType),
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
-    [setEdges, selectedEdgeType]
+    [setEdges, selectedEdgeType, selectedArrowType]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {

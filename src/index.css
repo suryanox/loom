@@ -151,6 +151,17 @@ html, body, #root {
   font-weight: 500;
 }
 
+.arrow-preview {
+  width: 32px;
+  font-size: 16px;
+  text-align: center;
+  color: #333;
+}
+
+.line-type-item.selected .arrow-preview {
+  color: #fff;
+}
+
 .flow-container {
   flex: 1;
   height: 100%;
