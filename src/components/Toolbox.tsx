@@ -1,5 +1,7 @@
-import { NODE_CONFIGS, EDGE_TYPES, EdgeType } from '../types';
+import { EDGE_TYPES, EdgeType } from '../types';
+import { NODE_CONFIGS } from '../nodeConfigs';
 import { ToolItem } from './ToolItem';
+import { LineTypeItem } from './LineTypeItem';
 
 interface ToolboxProps {
   onDragStart: (event: React.DragEvent, nodeType: string) => void;
@@ -20,26 +22,16 @@ export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange }: Too
       </div>
 
       <div className="toolbox-section">
-        <div className="toolbox-section-title">Connection Type</div>
-        <select
-          value={selectedEdgeType}
-          onChange={(e) => onEdgeTypeChange(e.target.value as EdgeType)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            background: '#16213e',
-            color: '#fff',
-            border: '1px solid #3b82f6',
-            borderRadius: '8px',
-            cursor: 'pointer',
-          }}
-        >
-          {EDGE_TYPES.map((edge) => (
-            <option key={edge.type} value={edge.type}>
-              {edge.label}
-            </option>
-          ))}
-        </select>
+        <div className="toolbox-section-title">Connections</div>
+        {EDGE_TYPES.map((edge) => (
+          <LineTypeItem
+            key={edge.type}
+            type={edge.type}
+            label={edge.label}
+            selected={selectedEdgeType === edge.type}
+            onClick={() => onEdgeTypeChange(edge.type)}
+          />
+        ))}
       </div>
     </div>
   );

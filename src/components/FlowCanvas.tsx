@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -11,6 +11,7 @@ import {
   useNodesState,
   useEdgesState,
   OnConnect,
+  OnSelectionChangeFunc,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { nodeTypes } from '../nodes';
@@ -24,14 +25,35 @@ interface FlowCanvasProps {
 export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
+
+  const onSelectionChange: OnSelectionChangeFunc = useCallback(({ edges: selectedEdges }) => {
+    setSelectedEdgeIds(selectedEdges.map(e => e.id));
+  }, []);
+
+  useEffect(() => {
+    if (selectedEdgeIds.length > 0) {
+      setEdges((eds) =>
+        eds.map((edge) => {
+          if (selectedEdgeIds.includes(edge.id)) {
+            return {
+              ...edge,
+              type: selectedEdgeType,
+              animated: selectedEdgeType === 'animated',
+              style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
+            };
+          }
+          return edge;
+        })
+      );
+    }
+  }, [selectedEdgeType, selectedEdgeIds, setEdges]);
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       const newEdge = {
         ...params,
-        type: selectedEdgeType === 'dashed' || selectedEdgeType === 'animated' 
-          ? selectedEdgeType 
-          : selectedEdgeType,
+        type: selectedEdgeType,
         animated: selectedEdgeType === 'animated',
         style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
       };
@@ -79,6 +101,7 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
         onConnect={onConnect}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         defaultEdgeOptions={{ type: selectedEdgeType }}

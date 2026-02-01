@@ -1,7 +1,7 @@
-import { NodeConfig } from '../types';
+import { NodeConfigWithIcon } from '../nodeConfigs';
 
 interface ToolItemProps {
-  config: NodeConfig;
+  config: NodeConfigWithIcon;
   onDragStart: (event: React.DragEvent, nodeType: string) => void;
 }
 
@@ -12,7 +12,7 @@ export function ToolItem({ config, onDragStart }: ToolItemProps) {
       draggable
       onDragStart={(e) => onDragStart(e, config.type)}
     >
-      <div className="tool-icon" style={{ backgroundColor: `${config.color}20` }}>
+      <div className="tool-icon">
         {config.icon}
       </div>
       <span className="tool-label">{config.label}</span>
