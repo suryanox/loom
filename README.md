@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://skothari.github.io/loom/">Live Demo</a>
+  <a href="https://suryanox.github.io/loom/">Live Demo</a>
 </p>
 
 ---
