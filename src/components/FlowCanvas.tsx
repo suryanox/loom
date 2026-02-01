@@ -23,10 +23,11 @@ import { EdgeType, ArrowType } from '../types';
 interface FlowCanvasProps {
   selectedEdgeType: EdgeType;
   selectedArrowType: ArrowType;
+  darkMode: boolean;
 }
 
-const getMarkers = (arrowType: ArrowType) => {
-  const marker = { type: MarkerType.ArrowClosed, color: '#333' };
+const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
+  const marker = { type: MarkerType.ArrowClosed, color: isDark ? '#fff' : '#333' };
   if (arrowType === 'head') {
     return { markerStart: undefined, markerEnd: marker };
   }
@@ -36,7 +37,7 @@ const getMarkers = (arrowType: ArrowType) => {
   return { markerStart: undefined, markerEnd: undefined };
 };
 
-export function FlowCanvas({ selectedEdgeType, selectedArrowType }: FlowCanvasProps) {
+export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
@@ -51,7 +52,7 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType }: FlowCanvasPr
       setEdges((eds) =>
         eds.map((edge) => {
           if (selectedEdgeIds.includes(edge.id)) {
-            const markers = getMarkers(selectedArrowType);
+            const markers = getMarkers(selectedArrowType, darkMode);
             return {
               ...edge,
               type: selectedEdgeType,
@@ -65,7 +66,7 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType }: FlowCanvasPr
         })
       );
     }
-  }, [selectedEdgeType, selectedArrowType, selectedEdgeIds, setEdges]);
+  }, [selectedEdgeType, selectedArrowType, selectedEdgeIds, setEdges, darkMode]);
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
@@ -74,11 +75,11 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType }: FlowCanvasPr
         type: selectedEdgeType,
         animated: selectedEdgeType === 'animated',
         style: selectedEdgeType === 'dashed' ? { strokeDasharray: '5,5' } : undefined,
-        ...getMarkers(selectedArrowType),
+        ...getMarkers(selectedArrowType, darkMode),
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
-    [setEdges, selectedEdgeType, selectedArrowType]
+    [setEdges, selectedEdgeType, selectedArrowType, darkMode]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {

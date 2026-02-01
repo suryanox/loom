@@ -10,12 +10,19 @@ interface ToolboxProps {
   onEdgeTypeChange: (type: EdgeType) => void;
   selectedArrowType: ArrowType;
   onArrowTypeChange: (type: ArrowType) => void;
+  darkMode: boolean;
+  onDarkModeToggle: () => void;
 }
 
-export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selectedArrowType, onArrowTypeChange }: ToolboxProps) {
+export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selectedArrowType, onArrowTypeChange, darkMode, onDarkModeToggle }: ToolboxProps) {
   return (
     <div className="toolbox">
-      <div className="toolbox-title">Loom</div>
+      <div className="toolbox-header">
+        <div className="toolbox-title">Loom</div>
+        <button className="dark-mode-toggle" onClick={onDarkModeToggle}>
+          {darkMode ? '☀️' : '🌙'}
+        </button>
+      </div>
       
       <div className="toolbox-section">
         <div className="toolbox-section-title">Components</div>
