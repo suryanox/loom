@@ -3,5 +3,6 @@ import { BaseNode } from './BaseNode';
 import { LoadBalancerIcon } from '../icons/LoadBalancerIcon';
 
 export function LoadBalancerNode(props: NodeProps) {
-  return <BaseNode {...props} data={{ label: props.data?.label || 'Load Balancer', icon: <LoadBalancerIcon /> }} />;
+  const label = (props.data?.label as string) || 'Load Balancer';
+  return <BaseNode {...props} data={{ label, icon: <LoadBalancerIcon /> }} />;
 }

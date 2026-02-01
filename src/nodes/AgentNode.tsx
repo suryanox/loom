@@ -3,5 +3,6 @@ import { BaseNode } from './BaseNode';
 import { AgentIcon } from '../icons/AgentIcon';
 
 export function AgentNode(props: NodeProps) {
-  return <BaseNode {...props} data={{ label: props.data?.label || 'Agent', icon: <AgentIcon /> }} />;
+  const label = (props.data?.label as string) || 'Agent';
+  return <BaseNode {...props} data={{ label, icon: <AgentIcon /> }} />;
 }

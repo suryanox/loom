@@ -3,5 +3,6 @@ import { BaseNode } from './BaseNode';
 import { UserIcon } from '../icons/UserIcon';
 
 export function UserNode(props: NodeProps) {
-  return <BaseNode {...props} data={{ label: props.data?.label || 'User', icon: <UserIcon /> }} />;
+  const label = (props.data?.label as string) || 'User';
+  return <BaseNode {...props} data={{ label, icon: <UserIcon /> }} />;
 }
