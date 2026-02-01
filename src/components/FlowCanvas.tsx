@@ -12,6 +12,7 @@ import {
   useEdgesState,
   OnConnect,
   OnSelectionChangeFunc,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { nodeTypes } from '../nodes';
@@ -26,6 +27,7 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onSelectionChange: OnSelectionChangeFunc = useCallback(({ edges: selectedEdges }) => {
     setSelectedEdgeIds(selectedEdges.map(e => e.id));
@@ -74,22 +76,25 @@ export function FlowCanvas({ selectedEdgeType }: FlowCanvasProps) {
       const type = event.dataTransfer.getData('application/reactflow');
       if (!type) return;
 
-      const position = {
-        x: event.clientX - 240 - 60,
-        y: event.clientY - 30,
-      };
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
 
       const newNode: Node = {
         id: `${type}-${Date.now()}`,
         type,
-        position,
+        position: {
+          x: position.x - 50,
+          y: position.y - 50,
+        },
         data: { label: type.charAt(0).toUpperCase() + type.slice(1) },
-        style: { width: 100, height: 100 },
+        style: { width: 70, height: 70 },
       };
 
       setNodes((nds) => [...nds, newNode]);
     },
-    [setNodes]
+    [setNodes, screenToFlowPosition]
   );
 
   return (
