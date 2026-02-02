@@ -3,7 +3,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   Node,
   Edge,
   Connection,
@@ -136,11 +135,11 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: Fl
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         defaultEdgeOptions={{ type: selectedEdgeType }}
+        proOptions={{ hideAttribution: true }}
         fitView
       >
         <Background />
         <Controls />
-        <MiniMap />
       </ReactFlow>
     </div>
   );
