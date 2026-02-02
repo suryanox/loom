@@ -31,9 +31,17 @@ export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selec
     <div className="toolbox">
       <div className="toolbox-header">
         <div className="toolbox-brand">
-          <svg className="toolbox-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="19" cy="18" r="3" stroke="currentColor" strokeWidth="2" />
+          <svg className="toolbox-logo" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="512" height="512" rx="96" fill="#000"/>
+            <circle cx="140" cy="140" r="48" fill="#3b82f6"/>
+            <circle cx="372" cy="140" r="48" fill="#10b981"/>
+            <circle cx="140" cy="372" r="48" fill="#f59e0b"/>
+            <circle cx="372" cy="372" r="48" fill="#ef4444"/>
+            <circle cx="256" cy="256" r="56" fill="#fff"/>
+            <path d="M180 160 L220 220" stroke="#fff" strokeWidth="8" strokeLinecap="round"/>
+            <path d="M332 160 L292 220" stroke="#fff" strokeWidth="8" strokeLinecap="round"/>
+            <path d="M180 352 L220 292" stroke="#fff" strokeWidth="8" strokeLinecap="round"/>
+            <path d="M332 352 L292 292" stroke="#fff" strokeWidth="8" strokeLinecap="round"/>
           </svg>
           <span className="toolbox-title">Loom</span>
         </div>
