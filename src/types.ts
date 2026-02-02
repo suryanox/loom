@@ -14,7 +14,12 @@ export type NodeType =
   | 'cdn'
   | 'blobstorage'
   | 'authprovider'
-  | 'notification';
+  | 'notification'
+  | 'paymentgateway'
+  | 'secretsmanager'
+  | 'logging'
+  | 'monitoring'
+  | 'webhook';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
 export type ArrowType = 'none' | 'head' | 'both';

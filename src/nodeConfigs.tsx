@@ -16,6 +16,11 @@ import { CDNIcon } from './icons/CDNIcon';
 import { BlobStorageIcon } from './icons/BlobStorageIcon';
 import { AuthProviderIcon } from './icons/AuthProviderIcon';
 import { NotificationIcon } from './icons/NotificationIcon';
+import { PaymentGatewayIcon } from './icons/PaymentGatewayIcon';
+import { SecretsManagerIcon } from './icons/SecretsManagerIcon';
+import { LoggingIcon } from './icons/LoggingIcon';
+import { MonitoringIcon } from './icons/MonitoringIcon';
+import { WebhookIcon } from './icons/WebhookIcon';
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -40,4 +45,9 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: 'blobstorage', label: 'Blob Storage', icon: <BlobStorageIcon /> },
   { type: 'authprovider', label: 'Auth Provider', icon: <AuthProviderIcon /> },
   { type: 'notification', label: 'Notification', icon: <NotificationIcon /> },
+  { type: 'paymentgateway', label: 'Payment Gateway', icon: <PaymentGatewayIcon /> },
+  { type: 'secretsmanager', label: 'Secrets Manager', icon: <SecretsManagerIcon /> },
+  { type: 'logging', label: 'Logging', icon: <LoggingIcon /> },
+  { type: 'monitoring', label: 'Monitoring', icon: <MonitoringIcon /> },
+  { type: 'webhook', label: 'Webhook', icon: <WebhookIcon /> },
 ];

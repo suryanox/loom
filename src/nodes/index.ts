@@ -15,6 +15,11 @@ import { CDNNode } from './CDNNode';
 import { BlobStorageNode } from './BlobStorageNode';
 import { AuthProviderNode } from './AuthProviderNode';
 import { NotificationNode } from './NotificationNode';
+import { PaymentGatewayNode } from './PaymentGatewayNode';
+import { SecretsManagerNode } from './SecretsManagerNode';
+import { LoggingNode } from './LoggingNode';
+import { MonitoringNode } from './MonitoringNode';
+import { WebhookNode } from './WebhookNode';
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -33,4 +38,9 @@ export const nodeTypes: NodeTypes = {
   blobstorage: BlobStorageNode,
   authprovider: AuthProviderNode,
   notification: NotificationNode,
+  paymentgateway: PaymentGatewayNode,
+  secretsmanager: SecretsManagerNode,
+  logging: LoggingNode,
+  monitoring: MonitoringNode,
+  webhook: WebhookNode,
 };
