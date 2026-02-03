@@ -19,7 +19,10 @@ export type NodeType =
   | 'secretsmanager'
   | 'logging'
   | 'monitoring'
-  | 'webhook';
+  | 'webhook'
+  | 'file'
+  | 'nosql'
+  | 'notes';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
 export type ArrowType = 'none' | 'head' | 'both';

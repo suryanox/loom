@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { EDGE_TYPES, ARROW_TYPES, EdgeType, ArrowType } from '../types';
-import { NODE_CONFIGS } from '../nodeConfigs';
+import { NODE_CONFIGS, NOTES_CONFIG } from '../nodeConfigs';
 import { ToolItem } from './ToolItem';
 import { LineTypeItem } from './LineTypeItem';
 import { ArrowTypeItem } from './ArrowTypeItem';
@@ -17,13 +17,13 @@ interface ToolboxProps {
 
 export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selectedArrowType, onArrowTypeChange, darkMode, onDarkModeToggle }: ToolboxProps) {
   const [search, setSearch] = useState('');
-  const [sectionsOpen, setSectionsOpen] = useState({ components: true, lines: true, arrows: true });
+  const [sectionsOpen, setSectionsOpen] = useState({ components: true, notes: true, lines: true, arrows: true });
 
   const filteredNodes = NODE_CONFIGS.filter((config) =>
     config.label.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleSection = (section: 'components' | 'lines' | 'arrows') => {
+  const toggleSection = (section: 'components' | 'notes' | 'lines' | 'arrows') => {
     setSectionsOpen((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
@@ -82,6 +82,18 @@ export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selec
             ) : (
               <div className="toolbox-empty">No components found</div>
             )}
+          </div>
+        )}
+      </div>
+
+      <div className="toolbox-section">
+        <button className="toolbox-section-header" onClick={() => toggleSection('notes')}>
+          <span className="toolbox-section-title">Notes</span>
+          <span className={`toolbox-section-chevron ${sectionsOpen.notes ? 'open' : ''}`}>›</span>
+        </button>
+        {sectionsOpen.notes && (
+          <div className="toolbox-section-content">
+            <ToolItem config={NOTES_CONFIG} onDragStart={onDragStart} />
           </div>
         )}
       </div>

@@ -20,6 +20,9 @@ import { SecretsManagerNode } from './SecretsManagerNode';
 import { LoggingNode } from './LoggingNode';
 import { MonitoringNode } from './MonitoringNode';
 import { WebhookNode } from './WebhookNode';
+import { FileNode } from './FileNode';
+import { NoSQLNode } from './NoSQLNode';
+import { NotesNode } from './NotesNode';
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -43,4 +46,7 @@ export const nodeTypes: NodeTypes = {
   logging: LoggingNode,
   monitoring: MonitoringNode,
   webhook: WebhookNode,
+  file: FileNode,
+  nosql: NoSQLNode,
+  notes: NotesNode,
 };

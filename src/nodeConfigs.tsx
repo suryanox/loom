@@ -21,6 +21,9 @@ import { SecretsManagerIcon } from './icons/SecretsManagerIcon';
 import { LoggingIcon } from './icons/LoggingIcon';
 import { MonitoringIcon } from './icons/MonitoringIcon';
 import { WebhookIcon } from './icons/WebhookIcon';
+import { FileIcon } from './icons/FileIcon';
+import { NoSQLIcon } from './icons/NoSQLIcon';
+import { NotesIcon } from './icons/NotesIcon';
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -50,4 +53,8 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: 'logging', label: 'Logging', icon: <LoggingIcon /> },
   { type: 'monitoring', label: 'Monitoring', icon: <MonitoringIcon /> },
   { type: 'webhook', label: 'Webhook', icon: <WebhookIcon /> },
+  { type: 'file', label: 'File', icon: <FileIcon /> },
+  { type: 'nosql', label: 'NoSQL', icon: <NoSQLIcon /> },
 ];
+
+export const NOTES_CONFIG: NodeConfigWithIcon = { type: 'notes', label: 'Notes', icon: <NotesIcon /> };
