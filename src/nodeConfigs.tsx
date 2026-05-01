@@ -27,6 +27,13 @@ import { TeamsIcon } from './icons/TeamsIcon';
 import { FileIcon } from './icons/FileIcon';
 import { NoSQLIcon } from './icons/NoSQLIcon';
 import { NotesIcon } from './icons/NotesIcon';
+import { WhatsAppIcon } from "./icons/WhatsAppIcon.tsx";
+import { LineIcon } from "./icons/LineIcon.tsx";
+import { KakaoTalkIcon } from "./icons/KakaoTalkIcon.tsx";
+import { TelegramIcon } from "./icons/TelegramIcon.tsx";
+import { TelephoneIcon } from "./icons/TelephoneIcon.tsx";
+import {CICDIcon} from "./icons/CICDIcon.tsx";
+import {VectorDBIcon} from "./icons/VectorDBIcon.tsx";
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -60,6 +67,13 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: 'teams', label: 'Teams', icon: <TeamsIcon /> },
   { type: 'file', label: 'File', icon: <FileIcon /> },
   { type: 'nosql', label: 'NoSQL', icon: <NoSQLIcon /> },
+  { type: 'whatsapp', label: 'WhatsApp', icon: <WhatsAppIcon /> },
+  { type: 'line', label: 'Line', icon: <LineIcon /> },
+  { type: 'kakaoTalk', label: 'KakaoTalk', icon: <KakaoTalkIcon /> },
+  { type: 'telegram', label: 'Telegram', icon: <TelegramIcon /> },
+  { type: 'telephone', label: 'Telephone', icon: <TelephoneIcon /> },
+  { type: 'ci', label: 'CI/CD', icon: <CICDIcon /> },
+  { type: 'vectordb', label: 'VectorDB', icon: <VectorDBIcon /> },
 ];
 
 export const NOTES_CONFIG: NodeConfigWithIcon = { type: 'notes', label: 'Notes', icon: <NotesIcon /> };

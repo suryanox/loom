@@ -30,6 +30,8 @@ import { LineNode } from "./LineNode.tsx";
 import { KakaoTalkNode } from "./KakaoTalkNode.tsx";
 import { TelegramNode } from "./TelegramNode.tsx";
 import { TelephoneNode } from "./TelephoneNode.tsx";
+import { VectorDBNode } from "./VectorDBNode.tsx";
+import { CINode } from "./CINode.tsx";
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -63,4 +65,6 @@ export const nodeTypes: NodeTypes = {
   kakaoTalk: KakaoTalkNode,
   telegram: TelegramNode,
   telephone: TelephoneNode,
+  vectordb: VectorDBNode,
+  ci: CINode
 };
