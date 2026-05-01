@@ -24,7 +24,14 @@ export type NodeType =
   | 'nosql'
   | 'notes'
   | 'slack'
-  | 'teams';
+  | 'teams'
+  | 'whatsapp'
+  | 'line'
+  | 'kakaoTalk'
+  | 'telegram'
+  | 'telephone'
+  | 'ci'
+  | 'vectordb';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
 export type ArrowType = 'none' | 'head' | 'both';
