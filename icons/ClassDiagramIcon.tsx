@@ -1,0 +1,53 @@
+export function ClassDiagramIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect
+        x="1"
+        y="1"
+        width="26"
+        height="26"
+        rx="3"
+        fill="#F5F3FF"
+        stroke="#7C3AED"
+        strokeWidth="1.5"
+      />
+      <rect x="1" y="1" width="26" height="8" rx="3" fill="#7C3AED" />
+      <line
+        x1="1"
+        y1="15"
+        x2="27"
+        y2="15"
+        stroke="#7C3AED"
+        strokeWidth="1"
+        opacity="0.4"
+      />
+      <rect
+        x="5"
+        y="10"
+        width="12"
+        height="2"
+        rx="1"
+        fill="white"
+        opacity="0.8"
+      />
+      <rect
+        x="5"
+        y="18"
+        width="14"
+        height="2"
+        rx="1"
+        fill="#7C3AED"
+        opacity="0.5"
+      />
+      <rect
+        x="5"
+        y="22"
+        width="10"
+        height="2"
+        rx="1"
+        fill="#7C3AED"
+        opacity="0.4"
+      />
+    </svg>
+  );
+}
