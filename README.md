@@ -28,5 +28,3 @@ yarn build
 ```
 
 ---
-
-MIT License
