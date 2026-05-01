@@ -151,6 +151,14 @@ html, body, #root {
   border-radius: 6px;
 }
 
+.toolbox-section-header--static {
+  cursor: default;
+}
+
+.toolbox-section-header--static:hover {
+  background: transparent;
+}
+
 .toolbox-section-title {
   color: #666;
   font-size: 11px;

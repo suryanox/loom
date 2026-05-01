@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { EDGE_TYPES, ARROW_TYPES, EdgeType, ArrowType } from '../types';
-import { NODE_CONFIGS, NOTES_CONFIG } from '../nodeConfigs';
+import { NODE_CONFIGS, NODE_GROUPS, NOTES_CONFIG, NodeGroup } from '../nodeConfigs';
 import { ToolItem } from './ToolItem';
 import { LineTypeItem } from './LineTypeItem';
 import { ArrowTypeItem } from './ArrowTypeItem';
@@ -15,17 +15,33 @@ interface ToolboxProps {
   onDarkModeToggle: () => void;
 }
 
+type SectionKey = NodeGroup | 'notes' | 'lines' | 'arrows';
+
+const initialSections: Record<SectionKey, boolean> = {
+  'People & Actors': true,
+  'Frontend & Clients': true,
+  'Backend & Services': true,
+  'Data & Storage': true,
+  'Security': true,
+  'Observability': true,
+  'Integrations': true,
+  notes: true,
+  lines: false,
+  arrows: false,
+};
+
 export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selectedArrowType, onArrowTypeChange, darkMode, onDarkModeToggle }: ToolboxProps) {
   const [search, setSearch] = useState('');
-  const [sectionsOpen, setSectionsOpen] = useState({ components: true, notes: true, lines: true, arrows: true });
+  const [sectionsOpen, setSectionsOpen] = useState<Record<SectionKey, boolean>>(initialSections);
 
+  const toggleSection = (section: SectionKey) => {
+    setSectionsOpen((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const isSearching = search.trim().length > 0;
   const filteredNodes = NODE_CONFIGS.filter((config) =>
     config.label.toLowerCase().includes(search.toLowerCase())
   );
-
-  const toggleSection = (section: 'components' | 'notes' | 'lines' | 'arrows') => {
-    setSectionsOpen((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
 
   return (
     <div className="toolbox">
@@ -66,14 +82,13 @@ export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selec
           <button className="search-clear" onClick={() => setSearch('')}>×</button>
         )}
       </div>
-      
-      <div className="toolbox-section">
-        <button className="toolbox-section-header" onClick={() => toggleSection('components')}>
-          <span className="toolbox-section-title">Components</span>
-          <span className="toolbox-section-badge">{filteredNodes.length}</span>
-          <span className={`toolbox-section-chevron ${sectionsOpen.components ? 'open' : ''}`}>›</span>
-        </button>
-        {sectionsOpen.components && (
+
+      {isSearching ? (
+        <div className="toolbox-section">
+          <div className="toolbox-section-header toolbox-section-header--static">
+            <span className="toolbox-section-title">Results</span>
+            <span className="toolbox-section-badge">{filteredNodes.length}</span>
+          </div>
           <div className="toolbox-section-content">
             {filteredNodes.length > 0 ? (
               filteredNodes.map((config) => (
@@ -83,20 +98,42 @@ export function Toolbox({ onDragStart, selectedEdgeType, onEdgeTypeChange, selec
               <div className="toolbox-empty">No components found</div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <>
+          {NODE_GROUPS.map((group) => {
+            const groupNodes = NODE_CONFIGS.filter((c) => c.group === group);
+            return (
+              <div key={group} className="toolbox-section">
+                <button className="toolbox-section-header" onClick={() => toggleSection(group)}>
+                  <span className="toolbox-section-title">{group}</span>
+                  <span className="toolbox-section-badge">{groupNodes.length}</span>
+                  <span className={`toolbox-section-chevron ${sectionsOpen[group] ? 'open' : ''}`}>›</span>
+                </button>
+                {sectionsOpen[group] && (
+                  <div className="toolbox-section-content">
+                    {groupNodes.map((config) => (
+                      <ToolItem key={config.type} config={config} onDragStart={onDragStart} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
-      <div className="toolbox-section">
-        <button className="toolbox-section-header" onClick={() => toggleSection('notes')}>
-          <span className="toolbox-section-title">Notes</span>
-          <span className={`toolbox-section-chevron ${sectionsOpen.notes ? 'open' : ''}`}>›</span>
-        </button>
-        {sectionsOpen.notes && (
-          <div className="toolbox-section-content">
-            <ToolItem config={NOTES_CONFIG} onDragStart={onDragStart} />
+          <div className="toolbox-section">
+            <button className="toolbox-section-header" onClick={() => toggleSection('notes')}>
+              <span className="toolbox-section-title">Notes</span>
+              <span className={`toolbox-section-chevron ${sectionsOpen.notes ? 'open' : ''}`}>›</span>
+            </button>
+            {sectionsOpen.notes && (
+              <div className="toolbox-section-content">
+                <ToolItem config={NOTES_CONFIG} onDragStart={onDragStart} />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
       <div className="toolbox-section">
         <button className="toolbox-section-header" onClick={() => toggleSection('lines')}>
