@@ -25,10 +25,31 @@ export function OpenTelemetryIcon() {
         fill="#425CC7"
         transform="rotate(-40 3 8)"
       />
-      <circle cx="36" cy="34" r="6" fill="#425CC7" opacity="0.2" stroke="#425CC7" strokeWidth="2" />
+      <circle
+        cx="36"
+        cy="34"
+        r="6"
+        fill="#425CC7"
+        opacity="0.2"
+        stroke="#425CC7"
+        strokeWidth="2"
+      />
       <circle cx="36" cy="34" r="3" fill="#425CC7" opacity="0.5" />
-      <path d="M38 28 Q42 24 40 20" stroke="#F5A800" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <path d="M41 31 Q46 28 45 23" stroke="#F5A800" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6" />
+      <path
+        d="M38 28 Q42 24 40 20"
+        stroke="#F5A800"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M41 31 Q46 28 45 23"
+        stroke="#F5A800"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.6"
+      />
     </svg>
   );
 }

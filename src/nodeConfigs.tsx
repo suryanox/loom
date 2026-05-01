@@ -38,6 +38,8 @@ import { SMSIcon } from "./icons/SMSIcon.tsx";
 import { CloudIcon } from "./icons/CloudIcon.tsx";
 import { OpenTelemetryIcon } from "./icons/OpenTelemetryIcon.tsx";
 import { AIAgentIcon } from "./icons/AIAgentIcon.tsx";
+import { ERDIcon } from "./icons/ERDIcon";
+import { ClassDiagramIcon } from "./icons/ClassDiagramIcon";
 
 export type NodeGroup =
   | "People & Actors"
@@ -46,7 +48,8 @@ export type NodeGroup =
   | "Data & Storage"
   | "Security"
   | "Observability"
-  | "Integrations";
+  | "Integrations"
+  | "Diagrams";
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -255,6 +258,20 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
     label: "SMS",
     icon: <SMSIcon />,
     group: "Integrations"
+  },
+
+  // Diagrams
+  {
+    type: "erd",
+    label: "ERD Entity",
+    icon: <ERDIcon />,
+    group: "Diagrams"
+  },
+  {
+    type: "classdiagram",
+    label: "Class",
+    icon: <ClassDiagramIcon />,
+    group: "Diagrams"
   }
 ];
 
@@ -265,7 +282,8 @@ export const NODE_GROUPS: NodeGroup[] = [
   "Data & Storage",
   "Security",
   "Observability",
-  "Integrations"
+  "Integrations",
+  "Diagrams"
 ];
 
 export const NOTES_CONFIG: NodeConfigWithIcon = {

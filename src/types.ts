@@ -36,7 +36,9 @@ export type NodeType =
   | "sms"
   | "cloud"
   | "openTelemetry"
-  | "aiagent";
+  | "aiagent"
+  | "erd"
+  | "classdiagram";
 
 export type EdgeType =
   | "default"

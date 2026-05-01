@@ -27,6 +27,7 @@ const initialSections: Record<SectionKey, boolean> = {
   "Frontend & Clients": true,
   "Backend & Services": true,
   "Data & Storage": true,
+  Diagrams: true,
   Security: true,
   Observability: true,
   Integrations: true,

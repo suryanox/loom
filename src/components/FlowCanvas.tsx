@@ -142,7 +142,10 @@ export function FlowCanvas({
             [...NODE_CONFIGS, NOTES_CONFIG].find((c) => c.type === type)
               ?.label ?? type.charAt(0).toUpperCase() + type.slice(1)
         },
-        style: { width: 70, height: 70 }
+        style:
+          type === "erd" || type === "classdiagram"
+            ? { width: 260, height: "auto" }
+            : { width: 70, height: 70 }
       };
 
       setNodes((nds) => [...nds, newNode]);

@@ -1,0 +1,62 @@
+export function ERDIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect
+        x="1"
+        y="1"
+        width="26"
+        height="26"
+        rx="3"
+        fill="#E0F2FE"
+        stroke="#0284C7"
+        strokeWidth="1.5"
+      />
+      <rect x="1" y="1" width="26" height="8" rx="3" fill="#0284C7" />
+      <line
+        x1="1"
+        y1="14"
+        x2="27"
+        y2="14"
+        stroke="#0284C7"
+        strokeWidth="1"
+        opacity="0.4"
+      />
+      <line
+        x1="1"
+        y1="20"
+        x2="27"
+        y2="20"
+        stroke="#0284C7"
+        strokeWidth="1"
+        opacity="0.4"
+      />
+      <rect
+        x="5"
+        y="10"
+        width="10"
+        height="2"
+        rx="1"
+        fill="#0284C7"
+        opacity="0.5"
+      />
+      <rect
+        x="5"
+        y="16"
+        width="10"
+        height="2"
+        rx="1"
+        fill="#0284C7"
+        opacity="0.4"
+      />
+      <rect
+        x="5"
+        y="22"
+        width="10"
+        height="2"
+        rx="1"
+        fill="#0284C7"
+        opacity="0.3"
+      />
+    </svg>
+  );
+}
