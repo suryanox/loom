@@ -23,6 +23,8 @@ import { WebhookNode } from './WebhookNode';
 import { FileNode } from './FileNode';
 import { NoSQLNode } from './NoSQLNode';
 import { NotesNode } from './NotesNode';
+import { SlackNode } from './SlackNode';
+import { TeamsNode } from './TeamsNode';
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -49,4 +51,6 @@ export const nodeTypes: NodeTypes = {
   file: FileNode,
   nosql: NoSQLNode,
   notes: NotesNode,
+  slack: SlackNode,
+  teams: TeamsNode,
 };

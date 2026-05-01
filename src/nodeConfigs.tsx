@@ -21,6 +21,9 @@ import { SecretsManagerIcon } from './icons/SecretsManagerIcon';
 import { LoggingIcon } from './icons/LoggingIcon';
 import { MonitoringIcon } from './icons/MonitoringIcon';
 import { WebhookIcon } from './icons/WebhookIcon';
+import { SlackIcon } from './icons/SlackIcon';
+import { TeamsIcon } from './icons/TeamsIcon';
+
 import { FileIcon } from './icons/FileIcon';
 import { NoSQLIcon } from './icons/NoSQLIcon';
 import { NotesIcon } from './icons/NotesIcon';
@@ -53,6 +56,8 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: 'logging', label: 'Logging', icon: <LoggingIcon /> },
   { type: 'monitoring', label: 'Monitoring', icon: <MonitoringIcon /> },
   { type: 'webhook', label: 'Webhook', icon: <WebhookIcon /> },
+  { type: 'slack', label: 'Slack', icon: <SlackIcon /> },
+  { type: 'teams', label: 'Teams', icon: <TeamsIcon /> },
   { type: 'file', label: 'File', icon: <FileIcon /> },
   { type: 'nosql', label: 'NoSQL', icon: <NoSQLIcon /> },
 ];

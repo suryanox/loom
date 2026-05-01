@@ -22,7 +22,9 @@ export type NodeType =
   | 'webhook'
   | 'file'
   | 'nosql'
-  | 'notes';
+  | 'notes'
+  | 'slack'
+  | 'teams';
 
 export type EdgeType = 'default' | 'straight' | 'step' | 'smoothstep' | 'dashed' | 'animated';
 export type ArrowType = 'none' | 'head' | 'both';
