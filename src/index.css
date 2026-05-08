@@ -1217,10 +1217,6 @@ body,
 /* ─── Canvas clear button ────────────────────────────────────────────── */
 
 .canvas-clear-btn {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 10;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -1269,22 +1265,6 @@ body,
 }
 
 /* ─── Mermaid dock & panel ───────────────────────────────────────────── */
-
-.mermaid-dock {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-}
-
-.mermaid-dock > * {
-  pointer-events: all;
-}
 
 /* ── Collapsed pill bar ── */
 .mermaid-bar {

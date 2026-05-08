@@ -7,7 +7,8 @@ interface MermaidImporterProps {
   darkMode: boolean;
 }
 
-const EXAMPLE = `flowchart TD
+const EXAMPLES: Record<string, string> = {
+  flowchart: `flowchart TD
   User[User] --> Gateway[API Gateway]
   Gateway --> Auth[Auth Service]
   Gateway --> UserSvc[User Service]
@@ -15,7 +16,57 @@ const EXAMPLE = `flowchart TD
   UserSvc --> Cache[(Redis Cache)]
   UserSvc --> DB
   UserSvc --> Queue[Kafka Queue]
-  Queue --> Notification[Notification Service]`;
+  Queue --> Notification[Notification Service]`,
+
+  erd: `erDiagram
+  User {
+    UUID id PK
+    VARCHAR email
+    VARCHAR name
+    TIMESTAMP created_at
+  }
+  Order {
+    UUID id PK
+    UUID user_id FK
+    INT total
+    VARCHAR status
+    TIMESTAMP created_at
+  }
+  Product {
+    UUID id PK
+    VARCHAR name
+    FLOAT price
+    INT stock
+  }
+  OrderItem {
+    UUID id PK
+    UUID order_id FK
+    UUID product_id FK
+    INT quantity
+  }
+  User ||--o{ Order : places
+  Order ||--|{ OrderItem : contains
+  Product ||--o{ OrderItem : included_in`,
+
+  classDiagram: `classDiagram
+  class Animal {
+    +String name
+    +int age
+    +makeSound() void
+  }
+  class Dog {
+    +String breed
+    +fetch() void
+  }
+  class Cat {
+    +Boolean indoor
+    +purr() void
+  }
+  Animal <|-- Dog
+  Animal <|-- Cat`,
+};
+
+const EXAMPLE_KEYS = Object.keys(EXAMPLES) as (keyof typeof EXAMPLES)[];
 
 export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
   const [expanded, setExpanded] = useState(false);
@@ -66,8 +117,7 @@ export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
 
   const handleMinimize = () => {
     setExpanded(false);
-    setError(null);
-    setSuccess(false);
+    // keep code intact so it's there when re-expanded
   };
 
   const handleGenerate = async () => {
@@ -80,8 +130,7 @@ export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
       setTimeout(() => {
         setSuccess(false);
         setExpanded(false);
-        setCode("");
-        setIsValid(false);
+        // keep code so user can re-generate or tweak
       }, 1000);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Conversion failed.");
@@ -90,8 +139,12 @@ export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
     }
   };
 
+  const exampleIndexRef = useRef(0);
+
   const handleLoadExample = () => {
-    setCode(EXAMPLE);
+    const key = EXAMPLE_KEYS[exampleIndexRef.current % EXAMPLE_KEYS.length];
+    exampleIndexRef.current += 1;
+    setCode(EXAMPLES[key]);
     setError(null);
     setSuccess(false);
     setTimeout(() => textareaRef.current?.focus(), 50);
@@ -183,7 +236,7 @@ export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
       )}
 
       <div className="mermaid-panel-footer">
-        Supports <code>flowchart</code> / <code>graph</code>. Labels map to Loom component types.
+        Supports <code>flowchart</code> / <code>erDiagram</code> / <code>classDiagram</code>. Click Example to cycle through samples.
       </div>
     </div>
   );

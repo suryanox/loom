@@ -67,7 +67,49 @@ function inferNodeType(id: string, label: string): NodeType {
   return "service"; // safe fallback
 }
 
-// ─── Edge style ──────────────────────────────────────────────────────────────
+// ─── Smart edge label from target node type ────────────────────────────────
+
+// When the user wrote no edge label in mermaid, we derive a meaningful one
+// from the target node's inferred type.
+const EDGE_LABEL_BY_TARGET: Partial<Record<NodeType, string>> = {
+  gateway:        "requests",
+  loadbalancer:   "routes via",
+  queue:          "publishes to",
+  cache:          "cached by",
+  database:       "reads/writes",
+  nosql:          "reads/writes",
+  vectordb:       "queries",
+  blobstorage:    "stores in",
+  authprovider:   "auth via",
+  secretsmanager: "fetches secret",
+  logging:        "logs to",
+  monitoring:     "metrics to",
+  openTelemetry:  "traces to",
+  notification:   "notifies via",
+  webhook:        "triggers",
+  paymentgateway: "pays via",
+  email:          "sends email",
+  sms:            "sends SMS",
+  cdn:            "served by",
+  frontend:       "renders",
+  mobile:         "responds to",
+  ai:             "infers via",
+  aiagent:        "delegates to",
+  ci:             "deploys via",
+  service:        "calls",
+  user:           "responds to",
+};
+
+function smartEdgeLabel(
+  rawText: string,
+  targetType: NodeType,
+): string | undefined {
+  // If the user explicitly wrote a label (not mermaid's "Text" default), keep it
+  const cleaned = rawText?.trim();
+  if (cleaned && cleaned !== "Text") return cleaned;
+  // Otherwise use target-type-aware label
+  return EDGE_LABEL_BY_TARGET[targetType];
+}
 
 function inferEdgeType(stroke?: string): EdgeType {
   if (stroke === "dotted") return "dashed";
@@ -117,13 +159,193 @@ export interface ConvertResult {
   edges: Edge[];
 }
 
+// ─── ERD diagram converter ───────────────────────────────────────────────
+
+async function convertErDiagram(text: string): Promise<ConvertResult> {
+  const diagram = await mermaid.mermaidAPI.getDiagramFromText(text);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = diagram.db as any;
+
+  // Use getData() as the primary source — it's the most reliable post-parse snapshot
+  // and avoids singleton DB state issues between multiple getDiagramFromText calls
+  const data = db.getData?.();
+  const rawNodes: Array<{ id: string; label?: string; shape?: string }> = data?.nodes ?? [];
+  const rawEdges: Array<{ id: string; start?: string; end?: string; src?: string; dest?: string; label?: string; title?: string }> = data?.edges ?? [];
+
+  console.log("[ERD] rawNodes:", rawNodes);
+  console.log("[ERD] rawEdges:", rawEdges);
+
+  // Fall back to getEntities / getRelationships if getData() gives nothing
+  const entities: Map<string, {
+    attributes: Array<{ name: string; type: string; keys: string[] }>
+  }> = db.getEntities?.() ?? new Map();
+
+  const relationships: Array<{
+    entityA: string;
+    roleA: string;
+    entityB: string;
+  }> = db.getRelationships?.() ?? [];
+
+  console.log("[ERD] entities:", Array.from(entities.keys()));
+  console.log("[ERD] relationships:", JSON.stringify(relationships));
+
+  const entityIds = rawNodes.length > 0
+    ? rawNodes.map((n) => n.id)
+    : Array.from(entities.keys());
+
+  const COLS = Math.min(3, Math.ceil(Math.sqrt(entityIds.length)));
+  const X_GAP = 320;
+  const Y_GAP = 320;
+
+  const nodes: Node[] = entityIds.map((name, i) => {
+    const entity = entities.get(name);
+    const attrs = entity?.attributes ?? [];
+
+    const columns = attrs.map((attr, idx) => ({
+      id: `c-${idx}`,
+      name: attr.name,
+      type: attr.type?.toUpperCase() ?? "VARCHAR",
+      pk: Array.isArray(attr.keys) && attr.keys.includes("PK"),
+    }));
+
+    if (columns.length === 0) {
+      columns.push({ id: "c0", name: "id", type: "UUID", pk: true });
+      columns.push({ id: "c1", name: "created_at", type: "TIMESTAMP", pk: false });
+    }
+
+    const estimatedHeight = 32 + 26 + columns.length * 28 + 8;
+
+    return {
+      id: name,
+      type: "erd",
+      position: { x: (i % COLS) * X_GAP, y: Math.floor(i / COLS) * Y_GAP },
+      data: { label: name, columns },
+      style: { width: 280, height: estimatedHeight },
+    };
+  });
+
+  // Build edges from rawEdges if available, else from relationships
+  let edges: Edge[];
+  if (rawEdges.length > 0) {
+    edges = rawEdges.map((e, idx) => ({
+      id: `erd-e-${idx}`,
+      source: e.start ?? e.src ?? "",
+      target: e.end ?? e.dest ?? "",
+      type: "smoothstep" as EdgeType,
+      label: e.label || e.title || undefined,
+      data: { label: e.label || e.title || "" },
+      markerEnd: { type: MarkerType.ArrowClosed },
+    })).filter((e) => e.source && e.target);
+  } else {
+    edges = relationships.map((rel, idx) => ({
+      id: `erd-e-${idx}`,
+      source: rel.entityA,
+      target: rel.entityB,
+      type: "smoothstep" as EdgeType,
+      label: rel.roleA || undefined,
+      data: { label: rel.roleA || "" },
+      markerEnd: { type: MarkerType.ArrowClosed },
+    }));
+  }
+
+  return { nodes, edges };
+}
+
+// ─── Class diagram converter ──────────────────────────────────────────────
+
+async function convertClassDiagram(text: string): Promise<ConvertResult> {
+  const diagram = await mermaid.mermaidAPI.getDiagramFromText(text);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = diagram.db as any;
+
+  const classes: Map<string, {
+    members: Array<{ id: string; memberType: 'method' | 'attribute'; visibility: string; parameters?: string; returnType?: string }>;
+    methods: Array<{ id: string; memberType: 'method' | 'attribute'; visibility: string; parameters?: string; returnType?: string }>;
+    annotations: string[];
+  }> = db.getClasses?.() ?? new Map();
+
+  const relations: Array<{
+    id1: string;
+    id2: string;
+    title: string;
+    relationTitle1?: string;
+    relationTitle2?: string;
+  }> = db.getRelations?.() ?? [];
+
+  const classIds = Array.from(classes.keys());
+  const COLS = Math.min(3, Math.ceil(Math.sqrt(classIds.length)));
+  const X_GAP = 300;
+  const Y_GAP = 320;
+
+  const VISIBILITY_MAP: Record<string, "+" | "-" | "#"> = {
+    "+": "+", "-": "-", "#": "#", "~": "+", "": "+",
+  };
+
+  const nodes: Node[] = classIds.map((name, i) => {
+    const cls = classes.get(name)!;
+    // In mermaid classDb, `members` holds attributes and `methods` holds methods
+    const allMembers = [...(cls.members ?? []), ...(cls.methods ?? [])];
+
+    const properties = allMembers
+      .filter((m) => m.memberType === "attribute")
+      .map((m, idx) => ({
+        id: `p-${idx}`,
+        visibility: (VISIBILITY_MAP[m.visibility] ?? "+") as "+" | "-" | "#",
+        name: m.id,
+        type: m.returnType || "string",
+      }));
+
+    const methods = allMembers
+      .filter((m) => m.memberType === "method")
+      .map((m, idx) => ({
+        id: `m-${idx}`,
+        visibility: (VISIBILITY_MAP[m.visibility] ?? "+") as "+" | "-" | "#",
+        signature: `${m.id}(${m.parameters ?? ""}): ${m.returnType || "void"}`,
+      }));
+
+    if (properties.length === 0 && methods.length === 0) {
+      properties.push({ id: "p0", visibility: "+", name: "id", type: "string" });
+    }
+
+    const estimatedHeight = 60 + properties.length * 26 + methods.length * 26 + 60;
+
+    return {
+      id: name,
+      type: "classdiagram",
+      position: { x: (i % COLS) * X_GAP, y: Math.floor(i / COLS) * Y_GAP },
+      data: { label: name, properties, methods },
+      style: { width: 260, height: estimatedHeight },
+    };
+  });
+
+  const edges: Edge[] = relations.map((rel, idx) => ({
+    id: `class-e-${idx}`,
+    source: rel.id1,
+    target: rel.id2,
+    type: "smoothstep",
+    label: rel.title || rel.relationTitle1 || undefined,
+    data: { label: rel.title || rel.relationTitle1 || "" },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  }));
+
+  return { nodes, edges };
+}
+
 /**
- * Parses a valid mermaid flowchart/graph and converts it to React Flow nodes + edges.
- * Uses mermaid.mermaidAPI.getDiagramFromText() — the public internal accessor —
- * to get the parsed FlowDB, then reads getVertices() / getEdges().
+ * Main entry point. Detects diagram type and routes to the right converter.
+ * Supports: flowchart/graph, erDiagram, classDiagram
  */
 export async function convertMermaidToFlow(text: string): Promise<ConvertResult> {
   ensureInit();
+
+  const firstWord = text.trim().split(/[\s{]/)[0].toLowerCase();
+
+  if (firstWord === "erdiagram") {
+    return convertErDiagram(text);
+  }
+  if (firstWord === "classdiagram") {
+    return convertClassDiagram(text);
+  }
 
   // getDiagramFromText is the public way to get the parsed diagram object
   // without doing any deep dist/ imports
@@ -145,10 +367,13 @@ export async function convertMermaidToFlow(text: string): Promise<ConvertResult>
   const vertexIds = Array.from(vertices.keys());
   const positions = layoutNodes(vertexIds);
 
+  // Build a nodeType lookup so edges can reference target type
+  const nodeTypeMap = new Map<string, NodeType>();
   const nodes: Node[] = vertexIds.map((id) => {
     const v = vertices.get(id)!;
     const label = (v.text ?? id).trim();
     const nodeType = inferNodeType(id, label);
+    nodeTypeMap.set(id, nodeType);
     const pos = positions.get(id) ?? { x: 0, y: 0 };
     const isWide = nodeType === "erd" || nodeType === "classdiagram";
     return {
@@ -162,6 +387,8 @@ export async function convertMermaidToFlow(text: string): Promise<ConvertResult>
 
   const edges: Edge[] = rawEdges.map((e, idx) => {
     const edgeType = inferEdgeType(e.stroke);
+    const targetType = nodeTypeMap.get(e.end) ?? "service";
+    const label = smartEdgeLabel(e.text ?? "", targetType);
     return {
       id: `mermaid-e-${idx}-${Date.now()}`,
       source: e.start,
@@ -169,8 +396,8 @@ export async function convertMermaidToFlow(text: string): Promise<ConvertResult>
       type: edgeType,
       animated: edgeType === "animated",
       style: edgeType === "dashed" ? { strokeDasharray: "5,5" } : undefined,
-      label: e.text || undefined,
-      data: { label: e.text ?? "" },
+      label,
+      data: { label: label ?? "" },
       markerEnd: { type: MarkerType.ArrowClosed },
     };
   });

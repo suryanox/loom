@@ -3,6 +3,7 @@ import {
   ReactFlow,
   Background,
   Controls,
+  Panel,
   Node,
   Edge,
   Connection,
@@ -26,6 +27,7 @@ interface FlowCanvasProps {
   selectedEdgeType: EdgeType;
   selectedArrowType: ArrowType;
   darkMode: boolean;
+  clearSignal: number;
 }
 
 const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
@@ -38,14 +40,20 @@ const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
   return { markerStart: undefined, markerEnd: undefined };
 };
 
-export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: FlowCanvasProps) {
+export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clearSignal }: FlowCanvasProps) {
   const initialData = useRef(loadDiagram());
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialData.current?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialData.current?.edges || []);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
-  const [confirmClear, setConfirmClear] = useState(false);
-  const confirmTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { screenToFlowPosition, fitView } = useReactFlow();
+
+  // React to clear signal from App
+  useEffect(() => {
+    if (clearSignal === 0) return;
+    setNodes([]);
+    setEdges([]);
+    clearDiagram();
+  }, [clearSignal, setNodes, setEdges]);
 
   useEffect(() => {
     saveDiagram(nodes, edges);
@@ -138,24 +146,6 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: Fl
     [nodes.length, setNodes, setEdges, fitView]
   );
 
-  // Clear canvas — first click arms, second click within 3s confirms
-  const handleClear = useCallback(() => {
-    if (!confirmClear) {
-      setConfirmClear(true);
-      confirmTimeout.current = setTimeout(() => setConfirmClear(false), 3000);
-    } else {
-      if (confirmTimeout.current) clearTimeout(confirmTimeout.current);
-      setConfirmClear(false);
-      setNodes([]);
-      setEdges([]);
-      clearDiagram();
-    }
-  }, [confirmClear, setNodes, setEdges]);
-
-  useEffect(() => () => {
-    if (confirmTimeout.current) clearTimeout(confirmTimeout.current);
-  }, []);
-
   return (
     <div className="flow-container" style={{ position: "relative" }}>
       <ReactFlow
@@ -175,38 +165,12 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode }: Fl
       >
         <Background />
         <Controls />
+
+        {/* Mermaid importer — bottom-center */}
+        <Panel position="bottom-center">
+          <MermaidImporter onImport={handleMermaidImport} darkMode={darkMode} />
+        </Panel>
       </ReactFlow>
-
-      {/* Clear canvas button — top-right of canvas */}
-      <button
-        className={`canvas-clear-btn${darkMode ? " dark" : ""}${confirmClear ? " armed" : ""}`}
-        onClick={handleClear}
-        title={confirmClear ? "Click again to confirm clear" : "Clear canvas"}
-      >
-        {confirmClear ? (
-          <>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Confirm clear
-          </>
-        ) : (
-          <>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
-            </svg>
-            Clear
-          </>
-        )}
-      </button>
-
-      {/* Mermaid importer — bottom-center of canvas */}
-      <div className="mermaid-dock">
-        <MermaidImporter onImport={handleMermaidImport} darkMode={darkMode} />
-      </div>
     </div>
   );
 }
