@@ -1213,3 +1213,375 @@ body,
 .dark .react-flow__controls-button svg {
   fill: #eee;
 }
+
+/* ─── Canvas clear button ────────────────────────────────────────────── */
+
+.canvas-clear-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.canvas-clear-btn:hover {
+  border-color: #f87171;
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.canvas-clear-btn.armed {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.3);
+}
+
+.canvas-clear-btn.dark {
+  background: #1e1e1e;
+  border-color: #3a3a3a;
+  color: #6b7280;
+}
+
+.canvas-clear-btn.dark:hover {
+  border-color: #f87171;
+  color: #fca5a5;
+  background: #2a1212;
+}
+
+.canvas-clear-btn.dark.armed {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ─── Mermaid dock & panel ───────────────────────────────────────────── */
+
+.mermaid-dock {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.mermaid-dock > * {
+  pointer-events: all;
+}
+
+/* ── Collapsed pill bar ── */
+.mermaid-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 24px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #9ca3af;
+  cursor: text;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  user-select: none;
+  min-width: 260px;
+}
+
+.mermaid-bar:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+.mermaid-bar.dark {
+  background: #1a1a1a;
+  border-color: #2e2e2e;
+  color: #6b7280;
+}
+
+.mermaid-bar.dark:hover { border-color: #3b82f6; }
+
+.mermaid-bar-placeholder {
+  flex: 1;
+  font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 12px;
+}
+
+.mermaid-bar-badge {
+  font-size: 10px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.mermaid-bar-badge.valid { background: #dcfce7; color: #15803d; }
+.mermaid-bar-badge.error { background: #fee2e2; color: #dc2626; }
+
+/* Minimize button */
+.mermaid-minimize-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+}
+
+.mermaid-minimize-btn:hover { background: #f3f4f6; color: #374151; }
+.mermaid-panel.dark .mermaid-minimize-btn { border-color: #3a3a3a; color: #6b7280; }
+.mermaid-panel.dark .mermaid-minimize-btn:hover { background: #252525; color: #d1d5db; }
+
+/* Panel */
+.mermaid-panel {
+  width: min(700px, 92vw);
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.16);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.mermaid-panel.dark {
+  background: #1a1a1a;
+  border-color: #2e2e2e;
+  color: #e5e7eb;
+}
+
+/* Header */
+.mermaid-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.mermaid-panel.dark .mermaid-panel-header {
+  border-bottom-color: #2a2a2a;
+}
+
+.mermaid-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+}
+
+.mermaid-panel.dark .mermaid-panel-title {
+  color: #f3f4f6;
+}
+
+/* Status badge */
+.mermaid-status {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.mermaid-status--validating {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+.mermaid-panel.dark .mermaid-status--validating {
+  background: #2d2200;
+  color: #fcd34d;
+}
+
+.mermaid-status--error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.mermaid-panel.dark .mermaid-status--error {
+  background: #2a0e0e;
+  color: #fca5a5;
+}
+
+.mermaid-status--valid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.mermaid-panel.dark .mermaid-status--valid {
+  background: #052e16;
+  color: #86efac;
+}
+
+/* Buttons */
+.mermaid-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mermaid-btn--ghost {
+  background: transparent;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.mermaid-btn--ghost:hover {
+  background: #f3f4f6;
+}
+
+.mermaid-panel.dark .mermaid-btn--ghost {
+  border-color: #3a3a3a;
+  color: #d1d5db;
+}
+
+.mermaid-panel.dark .mermaid-btn--ghost:hover {
+  background: #252525;
+}
+
+.mermaid-btn--primary {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.mermaid-btn--primary:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.mermaid-btn--primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Editor area */
+.mermaid-editor-wrap {
+  overflow: hidden;
+}
+
+.mermaid-editor {
+  display: block;
+  width: 100%;
+  height: 220px;
+  resize: vertical;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  background: #f8fafc;
+  color: #1e293b;
+  tab-size: 2;
+  transition: box-shadow 0.15s;
+}
+
+.mermaid-panel.dark .mermaid-editor {
+  background: #0f0f0f;
+  color: #c8ffc8;
+}
+
+.mermaid-editor::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.mermaid-editor--error {
+  box-shadow: inset 0 0 0 2px #fca5a5;
+}
+
+.mermaid-editor--valid {
+  box-shadow: inset 0 0 0 2px #86efac;
+}
+
+/* Error bar */
+.mermaid-error-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #fef2f2;
+  border-top: 1px solid #fecaca;
+  font-size: 11.5px;
+  color: #dc2626;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+.mermaid-error-bar svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mermaid-panel.dark .mermaid-error-bar {
+  background: #1e0a0a;
+  border-top-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Footer */
+.mermaid-panel-footer {
+  padding: 7px 14px;
+  font-size: 11px;
+  color: #94a3b8;
+  border-top: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+
+.mermaid-panel.dark .mermaid-panel-footer {
+  border-top-color: #222;
+  color: #475569;
+}
+
+.mermaid-panel-footer code {
+  font-family: monospace;
+  background: #f1f5f9;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10.5px;
+  color: #334155;
+}
+
+.mermaid-panel.dark .mermaid-panel-footer code {
+  background: #1e293b;
+  color: #7dd3fc;
+}
