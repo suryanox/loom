@@ -41,7 +41,22 @@ export type NodeType =
   | "classdiagram"
   | "datawarehouse"
   | "searchindex"
-  | "graphdb";
+  | "graphdb"
+  | "ec2"
+  | "lambda"
+  | "s3"
+  | "rds"
+  | "dynamodb"
+  | "apigateway"
+  | "cloudfront"
+  | "sns"
+  | "sqs"
+  | "eventbridge"
+  | "cognito"
+  | "cloudwatch"
+  | "codepipeline"
+  | "amplify"
+  | "appsync";
 
 export type EdgeType =
   | "default"

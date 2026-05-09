@@ -42,6 +42,21 @@ import { ClassNode } from "./ClassNode";
 import { DataWarehouseNode } from "./DataWarehouseNode";
 import { SearchIndexNode } from "./SearchIndexNode";
 import { GraphDBNode } from "./GraphDBNode";
+import { EC2Node } from "./EC2Node";
+import { LambdaNode } from "./LambdaNode";
+import { S3Node } from "./S3Node";
+import { RDSNode } from "./RDSNode";
+import { DynamoDBNode } from "./DynamoDBNode";
+import { APIGatewayNode } from "./APIGatewayNode";
+import { CloudFrontNode } from "./CloudFrontNode";
+import { SNSNode } from "./SNSNode";
+import { SQSNode } from "./SQSNode";
+import { EventBridgeNode } from "./EventBridgeNode";
+import { CognitoNode } from "./CognitoNode";
+import { CloudWatchNode } from "./CloudWatchNode";
+import { CodePipelineNode } from "./CodePipelineNode";
+import { AmplifyNode } from "./AmplifyNode";
+import { AppSyncNode } from "./AppSyncNode";
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -87,4 +102,19 @@ export const nodeTypes: NodeTypes = {
   datawarehouse: DataWarehouseNode,
   searchindex: SearchIndexNode,
   graphdb: GraphDBNode,
+  ec2: EC2Node,
+  lambda: LambdaNode,
+  s3: S3Node,
+  rds: RDSNode,
+  dynamodb: DynamoDBNode,
+  apigateway: APIGatewayNode,
+  cloudfront: CloudFrontNode,
+  sns: SNSNode,
+  sqs: SQSNode,
+  eventbridge: EventBridgeNode,
+  cognito: CognitoNode,
+  cloudwatch: CloudWatchNode,
+  codepipeline: CodePipelineNode,
+  amplify: AmplifyNode,
+  appsync: AppSyncNode,
 };

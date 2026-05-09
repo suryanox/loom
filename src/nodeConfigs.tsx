@@ -43,6 +43,21 @@ import { ClassDiagramIcon } from "./icons/ClassDiagramIcon";
 import { DataWarehouseIcon } from "./icons/DataWarehouseIcon";
 import { SearchIndexIcon } from "./icons/SearchIndexIcon";
 import { GraphDBIcon } from "./icons/GraphDBIcon";
+import { EC2Icon } from "./icons/EC2Icon";
+import { LambdaIcon } from "./icons/LambdaIcon";
+import { S3Icon } from "./icons/S3Icon";
+import { RDSIcon } from "./icons/RDSIcon";
+import { DynamoDBIcon } from "./icons/DynamoDBIcon";
+import { APIGatewayIcon } from "./icons/APIGatewayIcon";
+import { CloudFrontIcon } from "./icons/CloudFrontIcon";
+import { SNSIcon } from "./icons/SNSIcon";
+import { SQSIcon } from "./icons/SQSIcon";
+import { EventBridgeIcon } from "./icons/EventBridgeIcon";
+import { CognitoIcon } from "./icons/CognitoIcon";
+import { CloudWatchIcon } from "./icons/CloudWatchIcon";
+import { CodePipelineIcon } from "./icons/CodePipelineIcon";
+import { AmplifyIcon } from "./icons/AmplifyIcon";
+import { AppSyncIcon } from "./icons/AppSyncIcon";
 
 export type NodeGroup =
   | "People & Actors"
@@ -52,7 +67,8 @@ export type NodeGroup =
   | "Security"
   | "Observability"
   | "Integrations"
-  | "Diagrams";
+  | "Diagrams"
+  | "AWS";
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -248,7 +264,24 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
     label: "Class",
     icon: <ClassDiagramIcon />,
     group: "Diagrams"
-  }
+  },
+
+  // AWS
+  { type: "lambda",      label: "Lambda",        icon: <LambdaIcon />,        group: "AWS" },
+  { type: "s3",          label: "S3",             icon: <S3Icon />,            group: "AWS" },
+  { type: "ec2",         label: "EC2",            icon: <EC2Icon />,           group: "AWS" },
+  { type: "rds",         label: "RDS",            icon: <RDSIcon />,           group: "AWS" },
+  { type: "dynamodb",     label: "DynamoDB",       icon: <DynamoDBIcon />,      group: "AWS" },
+  { type: "apigateway",  label: "API Gateway",    icon: <APIGatewayIcon />,   group: "AWS" },
+  { type: "cloudfront",  label: "CloudFront",     icon: <CloudFrontIcon />,   group: "AWS" },
+  { type: "sns",         label: "SNS",             icon: <SNSIcon />,           group: "AWS" },
+  { type: "sqs",         label: "SQS",             icon: <SQSIcon />,           group: "AWS" },
+  { type: "eventbridge",label: "EventBridge",    icon: <EventBridgeIcon />,  group: "AWS" },
+  { type: "cognito",     label: "Cognito",         icon: <CognitoIcon />,      group: "AWS" },
+  { type: "cloudwatch",  label: "CloudWatch",     icon: <CloudWatchIcon />,   group: "AWS" },
+  { type: "codepipeline",label: "CodePipeline",  icon: <CodePipelineIcon />, group: "AWS" },
+  { type: "amplify",    label: "Amplify",         icon: <AmplifyIcon />,      group: "AWS" },
+  { type: "appsync",     label: "AppSync",         icon: <AppSyncIcon />,      group: "AWS" },
 ];
 
 export const NODE_GROUPS: NodeGroup[] = [
@@ -259,7 +292,8 @@ export const NODE_GROUPS: NodeGroup[] = [
   "Security",
   "Observability",
   "Integrations",
-  "Diagrams"
+  "Diagrams",
+  "AWS"
 ];
 
 export const NOTES_CONFIG: NodeConfigWithIcon = {

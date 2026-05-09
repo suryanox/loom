@@ -34,6 +34,7 @@ const initialSections: Record<SectionKey, boolean> = {
   Security: true,
   Observability: true,
   Integrations: true,
+  AWS: true,
   notes: true,
   lines: true,
   arrows: true
