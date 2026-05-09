@@ -59,19 +59,6 @@ function inferNodeType(id: string, label: string): NodeType {
 }
 
 /**
- * Strips Mermaid shape syntax to get the clean label.
- * e.g.  UserService[(UserService DB)]  →  UserService DB
- *       A[/My Label/]                  →  My Label
- *       B((Circle))                    →  Circle
- */
-function extractLabel(raw: string): string {
-  // Match content inside brackets/parens of various shapes
-  const match = raw.match(/[\[({<]+([^\])}>#]+)[\])}>#]+/);
-  if (match) return match[1].trim().replace(/^["']|["']$/g, "");
-  return raw.trim().replace(/^["']|["']$/g, "");
-}
-
-/**
  * Parse Mermaid edge style into our EdgeType.
  */
 function inferEdgeType(arrow: string): EdgeType {
