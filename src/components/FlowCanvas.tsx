@@ -28,6 +28,7 @@ interface FlowCanvasProps {
   selectedArrowType: ArrowType;
   darkMode: boolean;
   clearSignal: number;
+  onTapAdd?: (nodeType: string) => void;
 }
 
 const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
@@ -40,7 +41,7 @@ const getMarkers = (arrowType: ArrowType, isDark: boolean) => {
   return { markerStart: undefined, markerEnd: undefined };
 };
 
-export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clearSignal }: FlowCanvasProps) {
+export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clearSignal, onTapAdd }: FlowCanvasProps) {
   const initialData = useRef(loadDiagram());
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialData.current?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialData.current?.edges || []);
@@ -131,6 +132,37 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
     },
     [setNodes, screenToFlowPosition]
   );
+
+  const addNodeAtCenter = useCallback(
+    (type: string) => {
+      const position = screenToFlowPosition({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      });
+      const newNode: Node = {
+        id: `${type}-${Date.now()}`,
+        type,
+        position: { x: position.x - 35, y: position.y - 35 },
+        data: {
+          label:
+            [...NODE_CONFIGS, NOTES_CONFIG].find((c) => c.type === type)?.label ??
+            type.charAt(0).toUpperCase() + type.slice(1),
+        },
+        style:
+          type === "erd" || type === "classdiagram"
+            ? { width: 260, height: "auto" }
+            : { width: 70, height: 70 },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [setNodes, screenToFlowPosition]
+  );
+
+  useEffect(() => {
+    if (onTapAdd) {
+      (window as any).__loomTapAdd = addNodeAtCenter;
+    }
+  }, [onTapAdd, addNodeAtCenter]);
 
   const handleMermaidImport = useCallback(
     (importedNodes: Node[], importedEdges: Edge[]) => {

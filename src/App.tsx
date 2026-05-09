@@ -4,18 +4,17 @@ import { Toolbox } from "./components/Toolbox";
 import { FlowCanvas } from "./components/FlowCanvas";
 import { EdgeType, ArrowType } from "./types";
 import GitHubStar from "./components/GitHubStar";
-import MobileNotice from "./components/MobileNotice";
 
 const getSystemDarkMode = () =>
   window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 export default function App() {
-  const [selectedEdgeType, setSelectedEdgeType] =
-    useState<EdgeType>("smoothstep");
+  const [selectedEdgeType, setSelectedEdgeType] = useState<EdgeType>("smoothstep");
   const [selectedArrowType, setSelectedArrowType] = useState<ArrowType>("head");
   const [darkMode, setDarkMode] = useState(getSystemDarkMode);
   const [clearSignal, setClearSignal] = useState(0);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [toolboxOpen, setToolboxOpen] = useState(false);
   const confirmTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -23,6 +22,10 @@ export default function App() {
     const handleChange = (e: MediaQueryListEvent) => setDarkMode(e.matches);
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const handleTapAdd = useCallback((nodeType: string) => {
+    (window as any).__loomTapAdd?.(nodeType);
   }, []);
 
   useEffect(() => {
@@ -50,25 +53,34 @@ export default function App() {
 
   return (
     <ReactFlowProvider>
-      <MobileNotice />
       <div className={`app-container ${darkMode ? "dark" : ""}`}>
         <Toolbox
           onDragStart={onDragStart}
+          onTapAdd={handleTapAdd}
           selectedEdgeType={selectedEdgeType}
           onEdgeTypeChange={setSelectedEdgeType}
           selectedArrowType={selectedArrowType}
           onArrowTypeChange={setSelectedArrowType}
           darkMode={darkMode}
           onDarkModeToggle={() => setDarkMode(!darkMode)}
+          mobileOpen={toolboxOpen}
+          onMobileClose={() => setToolboxOpen(false)}
         />
+
+        {toolboxOpen && (
+          <div className="toolbox-backdrop" onClick={() => setToolboxOpen(false)} />
+        )}
+
         <FlowCanvas
           selectedEdgeType={selectedEdgeType}
           selectedArrowType={selectedArrowType}
           darkMode={darkMode}
           clearSignal={clearSignal}
+          onTapAdd={handleTapAdd}
         />
+
         <GitHubStar />
-        {/* Clear canvas button — sits beside GitHub star */}
+
         <button
           onClick={handleClear}
           title={confirmClear ? "Click again to confirm" : "Clear canvas"}
@@ -112,6 +124,19 @@ export default function App() {
               Clear
             </>
           )}
+        </button>
+
+        <button
+          className={`mobile-fab${darkMode ? " dark" : ""}`}
+          onClick={() => setToolboxOpen((v) => !v)}
+          aria-label="Toggle components"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            {toolboxOpen
+              ? <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>
+              : <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>
+            }
+          </svg>
         </button>
       </div>
     </ReactFlowProvider>

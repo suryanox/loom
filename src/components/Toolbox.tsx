@@ -12,12 +12,15 @@ import { ArrowTypeItem } from "./ArrowTypeItem";
 
 interface ToolboxProps {
   onDragStart: (event: React.DragEvent, nodeType: string) => void;
+  onTapAdd?: (nodeType: string) => void;
   selectedEdgeType: EdgeType;
   onEdgeTypeChange: (type: EdgeType) => void;
   selectedArrowType: ArrowType;
   onArrowTypeChange: (type: ArrowType) => void;
   darkMode: boolean;
   onDarkModeToggle: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
 }
 
 type SectionKey = NodeGroup | "notes" | "lines" | "arrows";
@@ -38,12 +41,15 @@ const initialSections: Record<SectionKey, boolean> = {
 
 export function Toolbox({
   onDragStart,
+  onTapAdd,
   selectedEdgeType,
   onEdgeTypeChange,
   selectedArrowType,
   onArrowTypeChange,
   darkMode,
-  onDarkModeToggle
+  onDarkModeToggle,
+  mobileOpen,
+  onMobileClose
 }: ToolboxProps) {
   const [search, setSearch] = useState("");
   const [sectionsOpen, setSectionsOpen] =
@@ -58,8 +64,13 @@ export function Toolbox({
     config.label.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleTap = (nodeType: string) => {
+    onTapAdd?.(nodeType);
+    onMobileClose();
+  };
+
   return (
-    <div className="toolbox">
+    <div className={`toolbox${mobileOpen ? " toolbox--mobile-open" : ""}`}>
       <div className="toolbox-header">
         <div className="toolbox-brand">
           <svg
@@ -150,11 +161,9 @@ export function Toolbox({
           <div className="toolbox-section-content">
             {filteredNodes.length > 0 ? (
               filteredNodes.map((config) => (
-                <ToolItem
-                  key={config.type}
-                  config={config}
-                  onDragStart={onDragStart}
-                />
+                <div key={config.type} onClick={() => handleTap(config.type)}>
+                  <ToolItem config={config} onDragStart={onDragStart} />
+                </div>
               ))
             ) : (
               <div className="toolbox-empty">No components found</div>
@@ -184,11 +193,9 @@ export function Toolbox({
                 {sectionsOpen[group] && (
                   <div className="toolbox-section-content">
                     {groupNodes.map((config) => (
-                      <ToolItem
-                        key={config.type}
-                        config={config}
-                        onDragStart={onDragStart}
-                      />
+                      <div key={config.type} onClick={() => handleTap(config.type)}>
+                        <ToolItem config={config} onDragStart={onDragStart} />
+                      </div>
                     ))}
                   </div>
                 )}

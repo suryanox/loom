@@ -1565,3 +1565,151 @@ body,
   background: #1e293b;
   color: #7dd3fc;
 }
+
+/* ─── Mobile FAB & Drawer ───────────────────────────────────────────── */
+
+.mobile-fab {
+  display: none;
+}
+
+.toolbox-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .toolbox {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 70vh;
+    max-height: 70vh;
+    z-index: 100;
+    border-right: none;
+    border-top: 1px solid #e5e5e5;
+    border-radius: 20px 20px 0 0;
+    padding: 16px 16px 32px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .toolbox::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: #d1d5db;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .dark .toolbox::before {
+    background: #444;
+  }
+
+  .toolbox.toolbox--mobile-open {
+    transform: translateY(0);
+  }
+
+  .dark .toolbox {
+    border-top-color: #333;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+  }
+
+  .toolbox-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .toolbox-hint {
+    display: none;
+  }
+
+  .flow-container {
+    flex: 1;
+    height: 100dvh;
+    width: 100%;
+  }
+
+  .mobile-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 101;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.5);
+    transition: transform 0.2s ease, background 0.2s;
+  }
+
+  .mobile-fab:active {
+    transform: translateX(-50%) scale(0.93);
+  }
+
+  .mobile-fab.dark {
+    background: #2563eb;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.6);
+  }
+
+  .tool-item {
+    padding: 12px 10px;
+    cursor: pointer;
+  }
+
+  .tool-item:active {
+    background: #e5e7eb;
+    transform: scale(0.97);
+  }
+
+  .dark .tool-item:active {
+    background: #333;
+  }
+
+  .mermaid-bar {
+    min-width: 200px;
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+
+  .mermaid-panel {
+    width: 96vw;
+    margin-bottom: 6px;
+  }
+
+  .mermaid-editor {
+    height: 160px;
+    font-size: 12px;
+  }
+
+  .react-flow__controls {
+    transform: scale(0.85);
+    transform-origin: bottom left;
+  }
+}
