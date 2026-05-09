@@ -178,9 +178,6 @@ async function convertErDiagram(text: string): Promise<ConvertResult> {
   const rawNodes: Array<{ id: string; label?: string; shape?: string }> = data?.nodes ?? [];
   const rawEdges: Array<{ id: string; start?: string; end?: string; src?: string; dest?: string; label?: string; title?: string }> = data?.edges ?? [];
 
-  console.log("[ERD] rawNodes:", rawNodes);
-  console.log("[ERD] rawEdges:", rawEdges);
-
   // Fall back to getEntities / getRelationships if getData() gives nothing
   const entities: Map<string, {
     attributes: Array<{ name: string; type: string; keys: string[] }>
@@ -191,9 +188,6 @@ async function convertErDiagram(text: string): Promise<ConvertResult> {
     roleA: string;
     entityB: string;
   }> = db.getRelationships?.() ?? [];
-
-  console.log("[ERD] entities:", Array.from(entities.keys()));
-  console.log("[ERD] relationships:", JSON.stringify(relationships));
 
   const entityIds = rawNodes.length > 0
     ? rawNodes.map((n) => n.id)
@@ -237,20 +231,32 @@ async function convertErDiagram(text: string): Promise<ConvertResult> {
       id: `erd-e-${idx}`,
       source: e.start ?? e.src ?? "",
       target: e.end ?? e.dest ?? "",
-      type: "smoothstep" as EdgeType,
+      type: "erd",
       label: e.label || e.title || undefined,
-      data: { label: e.label || e.title || "" },
-      markerEnd: { type: MarkerType.ArrowClosed },
+      data: {
+        label: e.label || e.title || "",
+        cardinality: "1:N",
+        sourceColumn: "",
+        targetColumn: "",
+        sourceEntity: "",
+        targetEntity: "",
+      },
     })).filter((e) => e.source && e.target);
   } else {
     edges = relationships.map((rel, idx) => ({
       id: `erd-e-${idx}`,
       source: rel.entityA,
       target: rel.entityB,
-      type: "smoothstep" as EdgeType,
+      type: "erd",
       label: rel.roleA || undefined,
-      data: { label: rel.roleA || "" },
-      markerEnd: { type: MarkerType.ArrowClosed },
+      data: {
+        label: rel.roleA || "",
+        cardinality: "1:N",
+        sourceColumn: "",
+        targetColumn: "",
+        sourceEntity: rel.entityA,
+        targetEntity: rel.entityB,
+      },
     }));
   }
 
@@ -330,8 +336,14 @@ async function convertClassDiagram(text: string): Promise<ConvertResult> {
     target: rel.id2,
     type: "smoothstep",
     label: rel.title || rel.relationTitle1 || undefined,
-    data: { label: rel.title || rel.relationTitle1 || "" },
-    markerEnd: { type: MarkerType.ArrowClosed },
+    data: {
+      label: rel.title || rel.relationTitle1 || "",
+      cardinality: "1",
+      sourceColumn: "",
+      targetColumn: "",
+      sourceEntity: "",
+      targetEntity: "",
+    },
   }));
 
   return { nodes, edges };

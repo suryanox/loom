@@ -100,7 +100,18 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
     return () => window.removeEventListener("keydown", onKey);
   }, [handleUndo, handleRedo]);
 
-  // React to clear signal from App
+  useEffect(() => {
+    const onKey = (_e: KeyboardEvent) => {};
+    const onDelete = (event: { keys: string[] }) => {
+      if (event.keys.includes("Delete") || event.keys.includes("Backspace")) {
+        if (selectedEdgeIds.length > 0) {
+          setEdges((eds) => eds.filter((e) => !selectedEdgeIds.includes(e.id)));
+        }
+      }
+    };
+    return () => window.removeEventListener("keydown", onKey);
+  }, [setEdges, selectedEdgeIds]);
+
   useEffect(() => {
     if (clearSignal === 0) return;
     setNodes([]);
@@ -145,17 +156,25 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
+      const sourceNode = nodes.find((n) => n.id === params.source);
+      const targetNode = nodes.find((n) => n.id === params.target);
+      const isERDConnection = sourceNode?.type === "erd" && targetNode?.type === "erd";
+
+      const edgeType = isERDConnection ? "erd" : selectedEdgeType;
+
       const newEdge = {
         ...params,
-        type: selectedEdgeType,
-        animated: selectedEdgeType === "animated",
-        style: selectedEdgeType === "dashed" ? { strokeDasharray: "5,5" } : undefined,
-        data: { label: "" },
-        ...getMarkers(selectedArrowType, darkMode)
+        type: edgeType,
+        animated: edgeType === "animated",
+        style: edgeType === "dashed" ? { strokeDasharray: "5,5" } : undefined,
+        data: isERDConnection
+          ? { label: "", cardinality: "1:N", sourceColumn: "", targetColumn: "", sourceEntity: sourceNode?.data?.label ?? "", targetEntity: targetNode?.data?.label ?? "" }
+          : { label: "" },
+        ...(isERDConnection ? {} : getMarkers(selectedArrowType, darkMode))
       };
       setEdges((eds) => addEdge(newEdge, eds));
     },
-    [setEdges, selectedEdgeType, selectedArrowType, darkMode]
+    [setEdges, selectedEdgeType, selectedArrowType, darkMode, nodes]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {

@@ -3,29 +3,25 @@ import {
   Position,
   NodeProps,
   useReactFlow,
-  NodeResizer
+  NodeResizer,
+  useStore,
 } from "@xyflow/react";
 import { useState, useCallback, useRef, useEffect } from "react";
 
-interface ERDColumn {
+export interface ERDColumn {
   id: string;
   name: string;
   type: string;
   pk: boolean;
+  fk?: boolean;
+  refEntity?: string;
+  refColumn?: string;
 }
 
 const SQL_TYPES = [
-  "UUID",
-  "SERIAL",
-  "INT",
-  "BIGINT",
-  "FLOAT",
-  "BOOLEAN",
-  "VARCHAR",
-  "TEXT",
-  "TIMESTAMP",
-  "DATE",
-  "JSON"
+  "UUID", "SERIAL", "INT", "BIGINT", "FLOAT", "BOOLEAN",
+  "VARCHAR", "TEXT", "TIMESTAMP", "DATE", "JSON",
+  "DECIMAL", "BLOB", "JSONB", "ARRAY"
 ];
 
 const DEFAULT_COLUMNS: ERDColumn[] = [
@@ -34,7 +30,7 @@ const DEFAULT_COLUMNS: ERDColumn[] = [
 ];
 
 export function ERDNode({ id, data, selected }: NodeProps) {
-  const { setNodes } = useReactFlow();
+  const { setNodes, getNodes } = useReactFlow();
   const [label, setLabel] = useState((data?.label as string) || "Entity");
   const [isEditingLabel, setIsEditingLabel] = useState(false);
   const [columns, setColumns] = useState<ERDColumn[]>(
@@ -56,10 +52,7 @@ export function ERDNode({ id, data, selected }: NodeProps) {
       setNodes((nodes) =>
         nodes.map((n) =>
           n.id === id
-            ? {
-                ...n,
-                data: { ...n.data, label: nextLabel, columns: nextColumns }
-              }
+            ? { ...n, data: { ...n.data, label: nextLabel, columns: nextColumns } }
             : n
         )
       );
@@ -87,9 +80,15 @@ export function ERDNode({ id, data, selected }: NodeProps) {
 
   const updateColumn = useCallback(
     (colId: string, field: keyof ERDColumn, value: string | boolean) => {
-      const next = columns.map((c) =>
-        c.id === colId ? { ...c, [field]: value } : c
-      );
+      const next = columns.map((c) => {
+        if (c.id !== colId) return c;
+        const updated = { ...c, [field]: value };
+        if (field === "fk" && value === false) {
+          delete updated.refEntity;
+          delete updated.refColumn;
+        }
+        return updated;
+      });
       setColumns(next);
       persist(label, next);
     },
@@ -104,6 +103,9 @@ export function ERDNode({ id, data, selected }: NodeProps) {
     },
     [columns, label, persist]
   );
+
+  const allERDNodes = getNodes().filter((n) => n.type === "erd");
+  const otherEntities = allERDNodes.filter((n) => n.id !== id);
 
   return (
     <div className="erd-node">
@@ -151,6 +153,7 @@ export function ERDNode({ id, data, selected }: NodeProps) {
 
       <div className="erd-col-header">
         <span className="erd-col-pk-label">PK</span>
+        <span className="erd-col-fk-label">FK</span>
         <span className="erd-col-name-label">Name</span>
         <span className="erd-col-type-label">Type</span>
         <span className="erd-col-del-label" />
@@ -160,7 +163,7 @@ export function ERDNode({ id, data, selected }: NodeProps) {
         {columns.map((col) => (
           <div
             key={col.id}
-            className={`erd-row${col.pk ? " erd-row--pk" : ""}`}
+            className={`erd-row${col.pk ? " erd-row--pk" : ""}${col.fk ? " erd-row--fk" : ""}`}
           >
             <input
               type="checkbox"
@@ -168,6 +171,13 @@ export function ERDNode({ id, data, selected }: NodeProps) {
               checked={col.pk}
               onChange={(e) => updateColumn(col.id, "pk", e.target.checked)}
               title="Primary key"
+            />
+            <input
+              type="checkbox"
+              className="erd-col-fk"
+              checked={col.fk ?? false}
+              onChange={(e) => updateColumn(col.id, "fk", e.target.checked)}
+              title="Foreign key"
             />
             <input
               className="erd-col-name"
@@ -181,9 +191,7 @@ export function ERDNode({ id, data, selected }: NodeProps) {
               onChange={(e) => updateColumn(col.id, "type", e.target.value)}
             >
               {SQL_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
+                <option key={t} value={t}>{t}</option>
               ))}
             </select>
             <button
@@ -196,6 +204,60 @@ export function ERDNode({ id, data, selected }: NodeProps) {
           </div>
         ))}
       </div>
+
+      {/* FK reference bar */}
+      {columns.some((c) => c.fk) && (
+        <div className="erd-fk-bar">
+          <span className="erd-fk-bar-title">FK References</span>
+          {columns
+            .filter((c) => c.fk)
+            .map((col) => (
+              <div key={col.id} className="erd-fk-ref">
+                <span className="erd-fk-ref-col">{col.name}</span>
+                <span className="erd-fk-ref-arrow">→</span>
+                <select
+                  className="erd-fk-ref-entity"
+                  value={col.refEntity ?? ""}
+                  onChange={(e) => {
+                    const refEntity = e.target.value;
+                    const refNode = otherEntities.find((n) => n.id === refEntity);
+                    const refCols = (refNode?.data?.columns as ERDColumn[]) ?? [];
+                    const autoRefCol = refCols.find((c) => c.pk)?.name ?? "";
+                    updateColumn(col.id, "refEntity", refEntity);
+                    if (autoRefCol) updateColumn(col.id, "refColumn", autoRefCol);
+                  }}
+                >
+                  <option value="">Select entity…</option>
+                  {otherEntities.map((n) => (
+                    <option key={n.id} value={n.id}>
+                      {(n.data?.label as string) || n.id}
+                    </option>
+                  ))}
+                </select>
+                {col.refEntity && (
+                  <>
+                    <span className="erd-fk-ref-dot">.</span>
+                    <select
+                      className="erd-fk-ref-column"
+                      value={col.refColumn ?? ""}
+                      onChange={(e) => updateColumn(col.id, "refColumn", e.target.value)}
+                    >
+                      <option value="">col…</option>
+                      {(
+                        (otherEntities.find((n) => n.id === col.refEntity)
+                          ?.data?.columns as ERDColumn[]) ?? []
+                      ).map((rc) => (
+                        <option key={rc.id} value={rc.name}>
+                          {rc.name}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
