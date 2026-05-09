@@ -1566,6 +1566,195 @@ body,
   color: #7dd3fc;
 }
 
+/* ─── Undo / Redo bar ───────────────────────────────────────────── */
+
+.undo-redo-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.undo-redo-bar.dark {
+  background: rgba(20,20,20,0.85);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.undo-redo-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.undo-redo-btn:hover:not(.disabled) {
+  background: #f3f4f6;
+  color: #111;
+}
+
+.undo-redo-btn.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.undo-redo-btn.dark {
+  color: rgba(255,255,255,0.7);
+}
+
+.undo-redo-btn.dark:hover:not(.disabled) {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.undo-redo-divider {
+  width: 1px;
+  height: 20px;
+  background: #e5e7eb;
+  flex-shrink: 0;
+}
+
+.undo-redo-divider.dark {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ─── Export menu ────────────────────────────────────────────────── */
+
+.export-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.export-trigger:hover {
+  background: #f3f4f6;
+  color: #111;
+}
+
+.export-trigger.dark {
+  background: rgba(20,20,20,0.85);
+  border-color: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+}
+
+.export-trigger.dark:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.export-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.export-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 201;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  padding: 6px;
+  min-width: 220px;
+  animation: dropdownIn 0.15s ease;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.export-dropdown.dark {
+  background: #1a1a1a;
+  border-color: #2e2e2e;
+}
+
+.export-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  color: #374151;
+  transition: background 0.12s;
+}
+
+.export-option:hover {
+  background: #f3f4f6;
+}
+
+.export-option.dark {
+  color: #d1d5db;
+}
+
+.export-option.dark:hover {
+  background: #252525;
+}
+
+.export-option-label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.export-option-desc {
+  font-size: 10.5px;
+  color: #9ca3af;
+  line-height: 1.3;
+}
+
+.export-option.dark .export-option-desc {
+  color: #6b7280;
+}
+
+.export-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
+}
+
+.export-dropdown.dark .export-divider {
+  background: #2a2a2a;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* ─── Mobile FAB & Drawer ───────────────────────────────────────────── */
 
 .mobile-fab {

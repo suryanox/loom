@@ -40,6 +40,9 @@ import { OpenTelemetryIcon } from "./icons/OpenTelemetryIcon.tsx";
 import { AIAgentIcon } from "./icons/AIAgentIcon.tsx";
 import { ERDIcon } from "./icons/ERDIcon";
 import { ClassDiagramIcon } from "./icons/ClassDiagramIcon";
+import { DataWarehouseIcon } from "./icons/DataWarehouseIcon";
+import { SearchIndexIcon } from "./icons/SearchIndexIcon";
+import { GraphDBIcon } from "./icons/GraphDBIcon";
 
 export type NodeGroup =
   | "People & Actors"
@@ -129,43 +132,16 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   },
 
   // Data & Storage
-  {
-    type: "database",
-    label: "Database",
-    icon: <DatabaseIcon />,
-    group: "Data & Storage"
-  },
-  {
-    type: "nosql",
-    label: "NoSQL",
-    icon: <NoSQLIcon />,
-    group: "Data & Storage"
-  },
-  {
-    type: "vectordb",
-    label: "VectorDB",
-    icon: <VectorDBIcon />,
-    group: "Data & Storage"
-  },
-  {
-    type: "cache",
-    label: "Cache",
-    icon: <CacheIcon />,
-    group: "Data & Storage"
-  },
-  {
-    type: "blobstorage",
-    label: "Blob Storage",
-    icon: <BlobStorageIcon />,
-    group: "Data & Storage"
-  },
-  {
-    type: "queue",
-    label: "Message Queue",
-    icon: <QueueIcon />,
-    group: "Data & Storage"
-  },
-  { type: "file", label: "File", icon: <FileIcon />, group: "Data & Storage" },
+  { type: "database",     label: "Database",       icon: <DatabaseIcon />,      group: "Data & Storage" },
+  { type: "nosql",        label: "NoSQL",           icon: <NoSQLIcon />,         group: "Data & Storage" },
+  { type: "datawarehouse",label: "Data Warehouse",  icon: <DataWarehouseIcon />, group: "Data & Storage" },
+  { type: "vectordb",     label: "VectorDB",         icon: <VectorDBIcon />,      group: "Data & Storage" },
+  { type: "searchindex",  label: "Search Index",    icon: <SearchIndexIcon />,   group: "Data & Storage" },
+  { type: "graphdb",      label: "Graph DB",         icon: <GraphDBIcon />,       group: "Data & Storage" },
+  { type: "cache",        label: "Cache",            icon: <CacheIcon />,         group: "Data & Storage" },
+  { type: "blobstorage",  label: "Blob Storage",    icon: <BlobStorageIcon />,   group: "Data & Storage" },
+  { type: "queue",        label: "Message Queue",   icon: <QueueIcon />,         group: "Data & Storage" },
+  { type: "file",         label: "File",             icon: <FileIcon />,          group: "Data & Storage" },
 
   // Security
   {

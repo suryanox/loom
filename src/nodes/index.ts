@@ -39,6 +39,9 @@ import { OpenTelemetryNode } from "./OpenTelemetryNode.tsx";
 import { AIAgentNode } from "./AIAgentNode.tsx";
 import { ERDNode } from "./ERDNode";
 import { ClassNode } from "./ClassNode";
+import { DataWarehouseNode } from "./DataWarehouseNode";
+import { SearchIndexNode } from "./SearchIndexNode";
+import { GraphDBNode } from "./GraphDBNode";
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -80,5 +83,8 @@ export const nodeTypes: NodeTypes = {
   openTelemetry: OpenTelemetryNode,
   aiagent: AIAgentNode,
   erd: ERDNode,
-  classdiagram: ClassNode
+  classdiagram: ClassNode,
+  datawarehouse: DataWarehouseNode,
+  searchindex: SearchIndexNode,
+  graphdb: GraphDBNode,
 };

@@ -22,6 +22,7 @@ import { EdgeType, ArrowType } from "../types";
 import { saveDiagram, loadDiagram, clearDiagram } from "../utils/storage";
 import { NODE_CONFIGS, NOTES_CONFIG } from "../nodeConfigs";
 import { MermaidImporter } from "./MermaidImporter";
+import { DiagramHistory } from "../utils/history";
 
 interface FlowCanvasProps {
   selectedEdgeType: EdgeType;
@@ -46,7 +47,58 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialData.current?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialData.current?.edges || []);
   const [selectedEdgeIds, setSelectedEdgeIds] = useState<string[]>([]);
-  const { screenToFlowPosition, fitView } = useReactFlow();
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+  const history = useRef(new DiagramHistory());
+  const isRestoringHistory = useRef(false);
+  const { screenToFlowPosition, fitView, getNodes, getEdges } = useReactFlow();
+
+  const pushHistory = useCallback((n: Node[], e: Edge[]) => {
+    history.current.push(n, e);
+    setCanUndo(history.current.canUndo());
+    setCanRedo(history.current.canRedo());
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    const entry = history.current.undo();
+    if (!entry) return;
+    isRestoringHistory.current = true;
+    setNodes(entry.nodes);
+    setEdges(entry.edges);
+    setCanUndo(history.current.canUndo());
+    setCanRedo(history.current.canRedo());
+    setTimeout(() => { isRestoringHistory.current = false; }, 50);
+  }, [setNodes, setEdges]);
+
+  const handleRedo = useCallback(() => {
+    const entry = history.current.redo();
+    if (!entry) return;
+    isRestoringHistory.current = true;
+    setNodes(entry.nodes);
+    setEdges(entry.edges);
+    setCanUndo(history.current.canUndo());
+    setCanRedo(history.current.canRedo());
+    setTimeout(() => { isRestoringHistory.current = false; }, 50);
+  }, [setNodes, setEdges]);
+
+  useEffect(() => {
+    if (initialData.current) {
+      history.current.push(initialData.current.nodes, initialData.current.edges);
+      setCanUndo(false);
+      setCanRedo(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta) return;
+      if (e.key === "z" && !e.shiftKey) { e.preventDefault(); handleUndo(); }
+      if ((e.key === "z" && e.shiftKey) || e.key === "y") { e.preventDefault(); handleRedo(); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [handleUndo, handleRedo]);
 
   // React to clear signal from App
   useEffect(() => {
@@ -58,6 +110,9 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
 
   useEffect(() => {
     saveDiagram(nodes, edges);
+    if (!isRestoringHistory.current) {
+      pushHistory(nodes, edges);
+    }
   }, [nodes, edges]);
 
   const onSelectionChange: OnSelectionChangeFunc = useCallback(
@@ -165,14 +220,20 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
   }, [onTapAdd, addNodeAtCenter]);
 
   const handleMermaidImport = useCallback(
-    (importedNodes: Node[], importedEdges: Edge[]) => {
-      const offset = nodes.length > 0 ? { x: 0, y: nodes.length * 30 } : { x: 0, y: 0 };
-      const positioned = importedNodes.map((n) => ({
-        ...n,
-        position: { x: n.position.x + offset.x, y: n.position.y + offset.y }
-      }));
-      setNodes((nds) => [...nds, ...positioned]);
-      setEdges((eds) => [...eds, ...importedEdges]);
+    (importedNodes: Node[], importedEdges: Edge[], replace: boolean) => {
+      if (replace) {
+        setNodes(importedNodes);
+        setEdges(importedEdges);
+        clearDiagram();
+      } else {
+        const offset = nodes.length > 0 ? { x: 0, y: nodes.length * 30 } : { x: 0, y: 0 };
+        const positioned = importedNodes.map((n) => ({
+          ...n,
+          position: { x: n.position.x + offset.x, y: n.position.y + offset.y }
+        }));
+        setNodes((nds) => [...nds, ...positioned]);
+        setEdges((eds) => [...eds, ...importedEdges]);
+      }
       setTimeout(() => fitView({ padding: 0.2, duration: 400 }), 50);
     },
     [nodes.length, setNodes, setEdges, fitView]
@@ -197,6 +258,36 @@ export function FlowCanvas({ selectedEdgeType, selectedArrowType, darkMode, clea
       >
         <Background />
         <Controls />
+
+        <Panel position="top-left">
+          <div className={`undo-redo-bar${darkMode ? " dark" : ""}`}>
+            <button
+              className={`undo-redo-btn${darkMode ? " dark" : ""}${!canUndo ? " disabled" : ""}`}
+              onClick={handleUndo}
+              disabled={!canUndo}
+              title="Undo (⌘Z)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 14 4 9l5-5" />
+                <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+              </svg>
+              Undo
+            </button>
+            <div className={`undo-redo-divider${darkMode ? " dark" : ""}`} />
+            <button
+              className={`undo-redo-btn${darkMode ? " dark" : ""}${!canRedo ? " disabled" : ""}`}
+              onClick={handleRedo}
+              disabled={!canRedo}
+              title="Redo (⌘⇧Z)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 14l5-5-5-5" />
+                <path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13" />
+              </svg>
+              Redo
+            </button>
+          </div>
+        </Panel>
 
         {/* Mermaid importer — bottom-center */}
         <Panel position="bottom-center">

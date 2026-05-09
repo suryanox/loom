@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function GitHubStar() {
+export default function GitHubStar({ darkMode }: { darkMode: boolean }) {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
@@ -23,29 +23,26 @@ export default function GitHubStar() {
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        position: "absolute",
-        top: 12,
-        right: 12,
         display: "flex",
         alignItems: "center",
         gap: 8,
         padding: "6px 12px",
-        background: "rgba(20,20,20,0.6)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        background: darkMode ? "rgba(20,20,20,0.6)" : "rgba(255,255,255,0.92)",
+        border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid #e5e7eb",
         borderRadius: 10,
         backdropFilter: "blur(10px)",
         textDecoration: "none",
-        color: "rgba(255,255,255,0.5)",
+        color: darkMode ? "rgba(255,255,255,0.5)" : "#6b7280",
         fontSize: 11,
-        zIndex: 10,
-        transition: "all 0.2s ease"
+        transition: "all 0.2s ease",
+        boxShadow: darkMode ? "none" : "0 1px 4px rgba(0,0,0,0.08)"
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.background = "rgba(20,20,20,0.8)";
+        e.currentTarget.style.background = darkMode ? "rgba(20,20,20,0.8)" : "#f3f4f6";
         e.currentTarget.style.transform = "translateY(-1px)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.background = "rgba(20,20,20,0.6)";
+        e.currentTarget.style.background = darkMode ? "rgba(20,20,20,0.6)" : "rgba(255,255,255,0.92)";
         e.currentTarget.style.transform = "translateY(0)";
       }}
     >
@@ -62,7 +59,7 @@ export default function GitHubStar() {
             style={{
               width: 1,
               height: 12,
-              background: "rgba(255,255,255,0.12)"
+              background: darkMode ? "rgba(255,255,255,0.12)" : "#e5e7eb"
             }}
           />
           <span style={{ color: "#facc15", fontWeight: 600 }}>⭐ {stars}</span>

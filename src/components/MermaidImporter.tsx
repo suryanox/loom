@@ -3,7 +3,7 @@ import { Node, Edge } from "@xyflow/react";
 import { validateMermaid, convertMermaidToFlow } from "../utils/mermaidConverter";
 
 interface MermaidImporterProps {
-  onImport: (nodes: Node[], edges: Edge[]) => void;
+  onImport: (nodes: Node[], edges: Edge[], replace: boolean) => void;
   darkMode: boolean;
 }
 
@@ -125,7 +125,7 @@ export function MermaidImporter({ onImport, darkMode }: MermaidImporterProps) {
     setIsGenerating(true);
     try {
       const { nodes, edges } = await convertMermaidToFlow(code);
-      onImport(nodes, edges);
+      onImport(nodes, edges, true);
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);

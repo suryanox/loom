@@ -38,7 +38,10 @@ export type NodeType =
   | "openTelemetry"
   | "aiagent"
   | "erd"
-  | "classdiagram";
+  | "classdiagram"
+  | "datawarehouse"
+  | "searchindex"
+  | "graphdb";
 
 export type EdgeType =
   | "default"
