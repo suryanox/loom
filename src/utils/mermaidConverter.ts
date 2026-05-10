@@ -1,5 +1,6 @@
 import { Node, Edge, MarkerType } from "@xyflow/react";
 import mermaid from "mermaid";
+import type { EntityNode, Relationship } from "mermaid/dist/diagrams/er/erTypes.js";
 import { NodeType, EdgeType } from "../types";
 
 // ─── One-time init ───────────────────────────────────────────────────────────
@@ -169,96 +170,54 @@ export interface ConvertResult {
 
 async function convertErDiagram(text: string): Promise<ConvertResult> {
   const diagram = await mermaid.mermaidAPI.getDiagramFromText(text);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = diagram.db as any;
 
-  // Use getData() as the primary source — it's the most reliable post-parse snapshot
-  // and avoids singleton DB state issues between multiple getDiagramFromText calls
-  const data = db.getData?.();
-  const rawNodes: Array<{ id: string; label?: string; shape?: string }> = data?.nodes ?? [];
-  const rawEdges: Array<{ id: string; start?: string; end?: string; src?: string; dest?: string; label?: string; title?: string }> = data?.edges ?? [];
+  const entities: Map<string, EntityNode> = db.getEntities?.() ?? new Map();
+  const relationships: Relationship[] = db.getRelationships?.() ?? [];
 
-  // Fall back to getEntities / getRelationships if getData() gives nothing
-  const entities: Map<string, {
-    attributes: Array<{ name: string; type: string; keys: string[] }>
-  }> = db.getEntities?.() ?? new Map();
-
-  const relationships: Array<{
-    entityA: string;
-    roleA: string;
-    entityB: string;
-  }> = db.getRelationships?.() ?? [];
-
-  const entityIds = rawNodes.length > 0
-    ? rawNodes.map((n) => n.id)
-    : Array.from(entities.keys());
-
+  const entityIds = Array.from(entities.keys());
   const COLS = Math.min(3, Math.ceil(Math.sqrt(entityIds.length)));
   const X_GAP = 320;
   const Y_GAP = 320;
 
-  const nodes: Node[] = entityIds.map((name, i) => {
-    const entity = entities.get(name);
-    const attrs = entity?.attributes ?? [];
+  const nodes: Node[] = entityIds.map((id, i) => {
+    const entity = entities.get(id)!;
+    const name = entity.label || entity.alias || id;
+    const attrs = entity.attributes ?? [];
 
     const columns = attrs.map((attr, idx) => ({
       id: `c-${idx}`,
       name: attr.name,
       type: attr.type?.toUpperCase() ?? "VARCHAR",
-      pk: Array.isArray(attr.keys) && attr.keys.includes("PK"),
+      pk: attr.keys.includes("PK"),
+      fk: attr.keys.includes("FK"),
     }));
 
     if (columns.length === 0) {
-      columns.push({ id: "c0", name: "id", type: "UUID", pk: true });
-      columns.push({ id: "c1", name: "created_at", type: "TIMESTAMP", pk: false });
+      columns.push({ id: "c0", name: "id", type: "UUID", pk: true, fk: false });
+      columns.push({ id: "c1", name: "created_at", type: "TIMESTAMP", pk: false, fk: false });
     }
 
     const estimatedHeight = 32 + 26 + columns.length * 28 + 8;
 
     return {
-      id: name,
+      id,
       type: "erd",
       position: { x: (i % COLS) * X_GAP, y: Math.floor(i / COLS) * Y_GAP },
       data: { label: name, columns },
-      style: { width: 280, height: estimatedHeight },
+      style: { width: 280, height: "auto" },
     };
   });
 
-  // Build edges from rawEdges if available, else from relationships
-  let edges: Edge[];
-  if (rawEdges.length > 0) {
-    edges = rawEdges.map((e, idx) => ({
-      id: `erd-e-${idx}`,
-      source: e.start ?? e.src ?? "",
-      target: e.end ?? e.dest ?? "",
-      type: "erd",
-      label: e.label || e.title || undefined,
-      data: {
-        label: e.label || e.title || "",
-        cardinality: "1:N",
-        sourceColumn: "",
-        targetColumn: "",
-        sourceEntity: "",
-        targetEntity: "",
-      },
-    })).filter((e) => e.source && e.target);
-  } else {
-    edges = relationships.map((rel, idx) => ({
-      id: `erd-e-${idx}`,
-      source: rel.entityA,
-      target: rel.entityB,
-      type: "erd",
-      label: rel.roleA || undefined,
-      data: {
-        label: rel.roleA || "",
-        cardinality: "1:N",
-        sourceColumn: "",
-        targetColumn: "",
-        sourceEntity: rel.entityA,
-        targetEntity: rel.entityB,
-      },
-    }));
-  }
+  const edges: Edge[] = relationships.map((rel, idx) => ({
+    id: `erd-e-${idx}`,
+    source: rel.entityA,
+    target: rel.entityB,
+    type: "smoothstep" as EdgeType,
+    label: rel.roleA || undefined,
+    data: { label: rel.roleA || "" },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  }));
 
   return { nodes, edges };
 }
@@ -326,7 +285,7 @@ async function convertClassDiagram(text: string): Promise<ConvertResult> {
       type: "classdiagram",
       position: { x: (i % COLS) * X_GAP, y: Math.floor(i / COLS) * Y_GAP },
       data: { label: name, properties, methods },
-      style: { width: 260, height: estimatedHeight },
+      style: { width: 260, height: "auto" },
     };
   });
 

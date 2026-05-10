@@ -3,7 +3,7 @@ import {
   Position,
   NodeProps,
   useReactFlow,
-  NodeResizer
+  useUpdateNodeInternals,
 } from "@xyflow/react";
 import { useState, useCallback, useRef, useEffect } from "react";
 
@@ -30,8 +30,10 @@ const DEFAULT_METHODS: ClassMethod[] = [
   { id: "m1", visibility: "+", signature: "getName(): string" }
 ];
 
-export function ClassNode({ id, data, selected }: NodeProps) {
+export function ClassNode({ id, data }: NodeProps) {
   const { setNodes } = useReactFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
+  const nodeRef = useRef<HTMLDivElement>(null);
   const [label, setLabel] = useState((data?.label as string) || "ClassName");
   const [isEditingLabel, setIsEditingLabel] = useState(false);
   const [properties, setProperties] = useState<ClassProperty[]>(
@@ -52,6 +54,10 @@ export function ClassNode({ id, data, selected }: NodeProps) {
       labelInputRef.current?.select();
     }
   }, [isEditingLabel]);
+
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [properties, methods, id, updateNodeInternals]);
 
   const persist = useCallback(
     (
@@ -146,14 +152,7 @@ export function ClassNode({ id, data, selected }: NodeProps) {
   );
 
   return (
-    <div className="class-node">
-      <NodeResizer
-        isVisible={selected}
-        minWidth={220}
-        minHeight={80}
-        lineStyle={{ stroke: "#7C3AED", strokeWidth: 1 }}
-        handleStyle={{ fill: "#7C3AED", width: 8, height: 8, borderRadius: 2 }}
-      />
+    <div className="class-node" ref={nodeRef}>
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
       <Handle type="source" position={Position.Left} id="left" />

@@ -4,7 +4,7 @@ import {
   NodeProps,
   useReactFlow,
   NodeResizer,
-  useStore,
+  useUpdateNodeInternals,
 } from "@xyflow/react";
 import { useState, useCallback, useRef, useEffect } from "react";
 
@@ -29,8 +29,10 @@ const DEFAULT_COLUMNS: ERDColumn[] = [
   { id: "c2", name: "created_at", type: "TIMESTAMP", pk: false }
 ];
 
-export function ERDNode({ id, data, selected }: NodeProps) {
+export function ERDNode({ id, data }: NodeProps) {
   const { setNodes, getNodes } = useReactFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
+  const nodeRef = useRef<HTMLDivElement>(null);
   const [label, setLabel] = useState((data?.label as string) || "Entity");
   const [isEditingLabel, setIsEditingLabel] = useState(false);
   const [columns, setColumns] = useState<ERDColumn[]>(
@@ -46,6 +48,10 @@ export function ERDNode({ id, data, selected }: NodeProps) {
       labelInputRef.current?.select();
     }
   }, [isEditingLabel]);
+
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [columns, id, updateNodeInternals]);
 
   const persist = useCallback(
     (nextLabel: string, nextColumns: ERDColumn[]) => {
@@ -108,14 +114,7 @@ export function ERDNode({ id, data, selected }: NodeProps) {
   const otherEntities = allERDNodes.filter((n) => n.id !== id);
 
   return (
-    <div className="erd-node">
-      <NodeResizer
-        isVisible={selected}
-        minWidth={240}
-        minHeight={80}
-        lineStyle={{ stroke: "#0284C7", strokeWidth: 1 }}
-        handleStyle={{ fill: "#0284C7", width: 8, height: 8, borderRadius: 2 }}
-      />
+    <div className="erd-node" ref={nodeRef}>
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
       <Handle type="source" position={Position.Left} id="left" />
