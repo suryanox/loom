@@ -57,6 +57,25 @@ import { CloudWatchNode } from "./CloudWatchNode";
 import { CodePipelineNode } from "./CodePipelineNode";
 import { AmplifyNode } from "./AmplifyNode";
 import { AppSyncNode } from "./AppSyncNode";
+import { GCPNode } from "./GCPNode";
+import { CloudRunNode } from "./CloudRunNode";
+import { CloudFunctionsNode } from "./CloudFunctionsNode";
+import { BigQueryNode } from "./BigQueryNode";
+import { GCSNode } from "./GCSNode";
+import { CloudSQLNode } from "./CloudSQLNode";
+import { FirestoreNode } from "./FirestoreNode";
+import { PubSubNode } from "./PubSubNode";
+import { GKENode } from "./GKENode";
+import { AzureNode } from "./AzureNode";
+import { AzureFunctionsNode } from "./AzureFunctionsNode";
+import { AzureContainerAppsNode } from "./AzureContainerAppsNode";
+import { AzureAKSINode } from "./AzureAKSINode";
+import { AzureSQLNode } from "./AzureSQLNode";
+import { AzureCOSMOSNode } from "./AzureCOSMOSNode";
+import { AzureBlobStorageNode } from "./AzureBlobStorageNode";
+import { AzureServiceBusNode } from "./AzureServiceBusNode";
+import { AzureEventHubNode } from "./AzureEventHubNode";
+import { AzureAPIHubNode } from "./AzureAPIHubNode";
 
 export const nodeTypes: NodeTypes = {
   user: UserNode,
@@ -117,4 +136,23 @@ export const nodeTypes: NodeTypes = {
   codepipeline: CodePipelineNode,
   amplify: AmplifyNode,
   appsync: AppSyncNode,
+  gcp: GCPNode,
+  cloudrun: CloudRunNode,
+  cloudfunctions: CloudFunctionsNode,
+  bigquery: BigQueryNode,
+  gcs: GCSNode,
+  cloudsql: CloudSQLNode,
+  firestore: FirestoreNode,
+  pubsub: PubSubNode,
+  gke: GKENode,
+  azure: AzureNode,
+  azurefunctions: AzureFunctionsNode,
+  azurecontainerapps: AzureContainerAppsNode,
+  azureaks: AzureAKSINode,
+  azuresql: AzureSQLNode,
+  azurecosmos: AzureCOSMOSNode,
+  azureblobstorage: AzureBlobStorageNode,
+  azureservicebus: AzureServiceBusNode,
+  azureeventhub: AzureEventHubNode,
+  azureapimanagement: AzureAPIHubNode,
 };

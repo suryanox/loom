@@ -35,6 +35,8 @@ const initialSections: Record<SectionKey, boolean> = {
   Observability: true,
   Integrations: true,
   AWS: true,
+  GCP: true,
+  Azure: true,
   notes: true,
   lines: true,
   arrows: true

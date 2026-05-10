@@ -56,7 +56,26 @@ export type NodeType =
   | "cloudwatch"
   | "codepipeline"
   | "amplify"
-  | "appsync";
+  | "appsync"
+  | "gcp"
+  | "cloudrun"
+  | "cloudfunctions"
+  | "bigquery"
+  | "gcs"
+  | "cloudsql"
+  | "firestore"
+  | "pubsub"
+  | "gke"
+  | "azure"
+  | "azurefunctions"
+  | "azurecontainerapps"
+  | "azureaks"
+  | "azuresql"
+  | "azurecosmos"
+  | "azureblobstorage"
+  | "azureservicebus"
+  | "azureeventhub"
+  | "azureapimanagement";
 
 export type EdgeType =
   | "default"

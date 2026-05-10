@@ -58,6 +58,25 @@ import { CloudWatchIcon } from "./icons/CloudWatchIcon";
 import { CodePipelineIcon } from "./icons/CodePipelineIcon";
 import { AmplifyIcon } from "./icons/AmplifyIcon";
 import { AppSyncIcon } from "./icons/AppSyncIcon";
+import { GCPIcon } from "./icons/GCPIcon";
+import { CloudRunIcon } from "./icons/CloudRunIcon";
+import { CloudFunctionsIcon } from "./icons/CloudFunctionsIcon";
+import { BigQueryIcon } from "./icons/BigQueryIcon";
+import { GCSIcon } from "./icons/GCSIcon";
+import { CloudSQLIcon } from "./icons/CloudSQLIcon";
+import { FirestoreIcon } from "./icons/FirestoreIcon";
+import { PubSubIcon } from "./icons/PubSubIcon";
+import { GKEIcon } from "./icons/GKEIcon";
+import { AzureIcon } from "./icons/AzureIcon";
+import { AzureFunctionsIcon } from "./icons/AzureFunctionsIcon";
+import { AzureContainerAppsIcon } from "./icons/AzureContainerAppsIcon";
+import { AzureAKSIcon } from "./icons/AzureAKSIcon";
+import { AzureSQLIcon } from "./icons/AzureSQLIcon";
+import { AzureCOSMOSIcon } from "./icons/AzureCOSMOSIcon";
+import { AzureBlobStorageIcon } from "./icons/AzureBlobStorageIcon";
+import { AzureServiceBusIcon } from "./icons/AzureServiceBusIcon";
+import { AzureEventHubIcon } from "./icons/AzureEventHubIcon";
+import { AzureAPIHubIcon } from "./icons/AzureAPIHubIcon";
 
 export type NodeGroup =
   | "People & Actors"
@@ -68,7 +87,9 @@ export type NodeGroup =
   | "Observability"
   | "Integrations"
   | "Diagrams"
-  | "AWS";
+  | "AWS"
+  | "GCP"
+  | "Azure";
 
 export interface NodeConfigWithIcon {
   type: NodeType;
@@ -282,6 +303,29 @@ export const NODE_CONFIGS: NodeConfigWithIcon[] = [
   { type: "codepipeline",label: "CodePipeline",  icon: <CodePipelineIcon />, group: "AWS" },
   { type: "amplify",    label: "Amplify",         icon: <AmplifyIcon />,      group: "AWS" },
   { type: "appsync",     label: "AppSync",         icon: <AppSyncIcon />,      group: "AWS" },
+
+  // GCP
+  { type: "gcp",         label: "GCP",             icon: <GCPIcon />,          group: "GCP" },
+  { type: "cloudrun",    label: "Cloud Run",       icon: <CloudRunIcon />,     group: "GCP" },
+  { type: "cloudfunctions", label: "Cloud Functions", icon: <CloudFunctionsIcon />, group: "GCP" },
+  { type: "bigquery",    label: "BigQuery",         icon: <BigQueryIcon />,     group: "GCP" },
+  { type: "gcs",         label: "Cloud Storage",    icon: <GCSIcon />,          group: "GCP" },
+  { type: "cloudsql",    label: "Cloud SQL",        icon: <CloudSQLIcon />,     group: "GCP" },
+  { type: "firestore",   label: "Firestore",       icon: <FirestoreIcon />,   group: "GCP" },
+  { type: "pubsub",     label: "Pub/Sub",          icon: <PubSubIcon />,      group: "GCP" },
+  { type: "gke",        label: "GKE",              icon: <GKEIcon />,          group: "GCP" },
+
+  // Azure
+  { type: "azure",           label: "Azure",            icon: <AzureIcon />,           group: "Azure" },
+  { type: "azurefunctions", label: "Azure Functions",  icon: <AzureFunctionsIcon />, group: "Azure" },
+  { type: "azurecontainerapps", label: "Container Apps",  icon: <AzureContainerAppsIcon />, group: "Azure" },
+  { type: "azureaks",        label: "AKS",              icon: <AzureAKSIcon />,         group: "Azure" },
+  { type: "azuresql",        label: "Azure SQL",        icon: <AzureSQLIcon />,          group: "Azure" },
+  { type: "azurecosmos",     label: "Cosmos DB",        icon: <AzureCOSMOSIcon />,       group: "Azure" },
+  { type: "azureblobstorage", label: "Blob Storage",    icon: <AzureBlobStorageIcon />,  group: "Azure" },
+  { type: "azureservicebus", label: "Service Bus",      icon: <AzureServiceBusIcon />,  group: "Azure" },
+  { type: "azureeventhub",   label: "Event Hubs",       icon: <AzureEventHubIcon />,       group: "Azure" },
+  { type: "azureapimanagement", label: "API Management", icon: <AzureAPIHubIcon />,         group: "Azure" },
 ];
 
 export const NODE_GROUPS: NodeGroup[] = [
@@ -293,7 +337,9 @@ export const NODE_GROUPS: NodeGroup[] = [
   "Observability",
   "Integrations",
   "Diagrams",
-  "AWS"
+  "AWS",
+  "GCP",
+  "Azure"
 ];
 
 export const NOTES_CONFIG: NodeConfigWithIcon = {
